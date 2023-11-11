@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Man-Made Animals: Self in the Other</title>
+
+    <!-- Google Analytics tag (gtag.js) -->
+    <script async src="./lib/gtag.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-MWCCTMRED3');
+    </script>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="./images/favicons/site.webmanifest">
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <!--    <script src="https://code.jquery.com/jquery-3.7.1.js"-->
+    <!--        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>-->
+    <script type="text/javascript" src="./lib/jquery-3.7.1.min.js"></script>
+
+    <!--stylesheet-->
+    <link rel="stylesheet" href="main.css">
+
+    <!--my own functions -->
+    <script type="text/javascript" src="./lib/myfunctions.js"></script>
+
+    <!--babylon links -->
+    <script src="./lib/dat.gui.min.js"></script>
+    <script src="./lib/Assets.js"></script>
+    <script src="./lib/ammo.js"></script>
+    <script src="./lib/cannon.js"></script>
+    <script src="./lib/Oimo.js"></script>
+    <script src="./lib/earcut.min.js"></script>
+    <script src="./lib/babylon.js"></script>
+    <script src="./lib/babylonjs.materials.min.js"></script>
+    <script src="./lib/babylonjs.proceduralTextures.min.js"></script>
+    <script src="./lib/babylonjs.postProcess.min.js"></script>
+    <script src="./lib/babylonjs.loaders.js"></script>
+    <script src="./lib/babylonjs.serializers.min.js"></script>
+    <script src="./lib/babylon.gui.min.js"></script>
+    <script src="./lib/babylon.inspector.bundle.js"></script>
+    <script src="https://cdn.babylonjs.com/babylon.glTF2FileLoader.js"></script>
+    <!--    <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>-->
+    <!--    <script src="./lib/babylon.gui.min.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>-->
+    <script src="./lib/HavokPhysics_umd.js"></script>
+    <script src="./lib/meshwriter.min.js"></script>
+    <!--    <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>-->
+    <!--    <script src="./lib/babylon.inspector.bundle.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/babylon.js"></script>-->
+    <!--    <script src="./lib/babylon.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>-->
+    <script src="./lib/babylonjs.loaders.min.js"></script>
+    <!--    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>-->
+    <script src="./lib/html2canvas.min.js"></script>
+
+</head>
+
+<body>
+    <!--最新读取屏幕覆盖读取部分 -->
+    <div id="loading-scene">
+        <div id="loading-image" style='background-image: url("./images/loading_0.png");'></div>
+        <div id="loading-text">
+            <p>Welcome to</p>
+            <h1 id="ex-title">Man-Made Animals:<br>Self in the Other</h1>
+            <p>a Pavilion for the 6th Wrong Biennale</p>
+            <br>
+            <p style="font-size: 0.8em;"><em>Please make sure the sound is on and the pop-up is allowed,</em></p>
+            <p style="font-size: 0.8em;"><em id="loading-text-progress"></em></p>
+            <br>
+        </div>
+    </div>
+
+    <!-- resize重新读取提醒 -->
+    <div id="noti">
+        <span>Detected window resize. Reloading for you...</span>
+    </div>
+
+    <!-- resize重新读取提醒 -->
+    <div id="noti">
+        <span>Detected window resize. Reloading for you...</span>
+    </div>
+
+    <!-- 音效 -->
+    <audio id="beep" src="./audio/beep.mp3" style="display: none;"></audio>
+    <audio id="whoosh" src="./audio/whoosh.mp3" style="display: none;"></audio>
+    <audio id="ding" src="./audio/ding.mp3" style="display: none;"></audio>
+    <audio id="dong" src="./audio/dong.mp3" style="display: none;"></audio>
+    <audio id="shutter" src="./audio/shutter.mp3" style="display: none;"></audio>
+    <audio src="./audio/atmosphere-piano-158054.mp3" loop autoplay style="display: none;" id="mainAudio"></audio>
+    <script>
+        let whoosh = document.querySelector("#whoosh");
+        let beep = document.querySelector("#beep");
+        let ding = document.querySelector("#ding");
+        let dong = document.querySelector("#dong");
+        let shutter = document.querySelector("#shutter");
+    </script>
+
+    <!-- 界面菜单部分 开始 -->
+    <!-- 左上菜单 -->
+    <div class="leftTopSection" data-html2canvas-ignore="true">
+        <span id="you-are"></span><br>
+        <span id="room-line-1"></span><br>
+        <span id="room-line-2"></span><br>
+        <span id="biennale">
+            Part of the <a onclick="showEx()">Man-Made Animals: Self in the Other</a><br>
+            a Pavilion for the 6th Wrong Biennale</a>
+        </span><br>
+        <script type="text/javascript">
+            let time = setInterval(() => {
+                if (document.querySelector('#loading-scene').style.display == 'none') {
+                    var showText = function (target, message, index, interval) {
+                        if (index < message.length) {
+                            $(target).append(message[index++]);
+                            setTimeout(function () {
+                                showText(target, message, index, interval);
+                            }, interval);
+                        }
+                    }
+
+                    $(function () {
+                        showText("#you-are", "You are now in the", 0, 100);
+                    });
+
+                    $(function () {
+                        showText("#room-line-1", "Elephant", 0, 200);
+                    });
+
+                    $(function () {
+                        showText("#room-line-2", "Room", 0, 300);
+                    });
+
+                    setTimeout($("#biennale").fadeIn(5000), 5000);
+
+                    clearInterval(time)
+                }
+            }, 200)
+        </script>
+    </div>
+    <!-- 左下菜单 -->
+    <div class="leftBottomSection" data-html2canvas-ignore="true">
+        <span style="color: white; letter-spacing: 0.1em">ABOUT</span>
+        <button id="thisRoom" onclick="showInfo('room');">This Room</button>
+        <button id="thisProject" onclick="showInfo('project')">This Project</button>
+        <button id="thisUs" onclick="showInfo('us')">Creators</button>
+    </div>
+    <!-- 右上菜单 -->
+    <div class="rightTopButton" data-html2canvas-ignore="true">
+        <div class="handy-menu">
+            <button id="download"></button>
+            <button id="mute" onclick="toggle(this);">
+                <img src="./images/icons/sound1.png" onMouseOver="this.src='./images/icons/sound7.png'"
+                    onMouseOut="this.src='./images/icons/sound1.png'" />
+            </button>
+            <button id="capture" onclick="capture()">
+                <img src="./images/icons/photo1.png" onMouseOver="this.src='./images/icons/photo3.png'"
+                    onMouseOut="this.src='./images/icons/photo1.png'" />
+            </button>
+            <button id="backToOriginalPosition">
+                <img src="./images/icons/return1.png" onMouseOver="this.src='./images/icons/return3.png'"
+                    onMouseOut="this.src='./images/icons/return1.png'" />
+            </button>
+        </div>
+        <div id="words-div"><a id="show-tips" onclick="showTips()">
+                <div id="words"></div>
+            </a></div>
+        <div id="all-tips">
+            <ul>
+                <li>Use your mouse to click & drag to turn the viewport</li>
+                <li>Use the up/down/left/right keys on your keyboard to move around</li>
+                <li>Use the bottom menus to check different parts of the exhibition</li>
+                <li>Hit the doors to check if you can enter</li>
+                <li>Click on 'About This Room' to see a list of all the works in this room</li>
+                <li>Turn the sound on for your browser for the full experience</li>
+            </ul>
+            <span id="tips-ok" onclick="closeTips()">okay</span>
+        </div>
+        <script type="text/javascript">
+                (function () {
+                    var moretips = "<span style='text-decoration: underscore'><br><em>click for more tips</em></span>";
+                    var words = [
+                        "TIPS: Turn the sound on for your browser for the full experience" + moretips,
+                        "TIPS: Use your mouse to click & drag to turn the viewport" + moretips,
+                        "TIPS: Use the up/down/left/right keys on your keyboard to move around" + moretips,
+                        "TIPS: Use the bottom menus to check different parts of the exhibition" + moretips,
+                        "TIPS: Click on 'About This Room' to see works in this room" + moretips,
+                        "TIPS: Hit on the doors to see if you can enter" + moretips,
+                    ],
+                        i = 0;
+
+                    setInterval(function () {
+                        $('#words').fadeOut(function () {
+                            $(this).html(words[(i = (i + 1) % words.length)]).fadeIn();
+                        });
+                    }, 7000)
+                })();
+
+        </script>
+    </div>
+    <!-- 右下菜单 -->
+    <div class="rightBottomButton" data-html2canvas-ignore="true">
+        <!-- <button onclick="switchLight(0)">改变前部灯光颜色/Switch Light Front</button>
+    <button onclick="switchLight(1)">改变后部灯光颜色/Switch Light Back</button> -->
+        <!-- <button onclick="putSphere()">放入小球/Put in Spheres</button> -->
+        <span style="color: white; letter-spacing: 0.1em">TAKE ME TO THE</span>
+        <button onclick="window.location.href='./scene1.html';">Wild Animal Room</button>
+        <button onclick="window.location.href='./scene2.html';">Domesticated Animal Room</button>
+        <button onclick="window.location.href='./scene3.html';">Not an Animal Room</button>
+    </div>
+    <!--界面菜单部分 结束-->
+
+
+    <!-- 询问进入区域房间部分 开始-->
+    <div id="entrytip">
+        Sorry, room unavailable<br>
+        at the moment.<br>
+        Please check other doors.
+    </div>
+    <div id="entrytip">
+        Wanna enter the <br>Wild Animal Room?
+        <div class="button-set">
+            <button id="leftbutton">Yes</button>
+            <button id="rightbutton">No</button>
+        </div>
+    </div>
+    <div id="entrytip">
+        Wanna enter the <br>Domesticated Animal Room?
+        <div class="button-set">
+            <button id="leftbutton">Yes</button>
+            <button id="rightbutton">No</button>
+        </div>
+    </div>
+    <div id="entrytip">
+        Wanna enter the <br>Not an Animal Room?
+        <div class="button-set">
+            <button id="leftbutton">Yes</button>
+            <button id="rightbutton">No</button>
+        </div>
+    </div>
+    <div id="notify">Sorry, not this zone</div>
+    <!-- 询问进入区域房间部分 结束-->
+
+
+    <!-- 画板部分 -->
+    <div id="draw-board">
+        <input type="text" placeholder="Work Title" id="composition">
+        <input type="text" placeholder="Your Name" id="author">
+        <img src="./textures/ball-anim.gif" id="animationBox">
+        <button id="clean">Startover</button>
+        <select id="penWidth">
+            <option value="1">1px</option>
+            <option value="2">2px</option>
+            <option value="4">4px</option>
+            <option value="6">6px</option>
+            <option value="8">8px</option>
+            <option value="10">10px</option>
+            <option value="20" selected>20px</option>
+            <option value="30">30px</option>
+            <option value="50">50px</option>
+        </select>
+        <select name="" id="selectColor">
+            <option value="black" selected>black</option>
+            <option value="rgb(100, 100, 100)">dark grey</option>
+            <option value="rgb(244, 67, 54)">red</option>
+            <option value="rgb(255, 153, 51)">orange</option>
+            <option value="rgb(102, 51, 0)">brown</option>
+            <option value="rgb(255, 243, 230)">beige</option>
+            <option value="rgb(255, 255, 102)">yellow</option>
+            <option value="rgb(102, 255, 102)">green</option>
+            <option value="rgb(102, 255, 255)">aqua</option>
+            <option value="rgb(0, 89, 179)">blue</option>
+            <option value="rgb(153, 135, 255)">purple</option>
+            <option value="rgb(255, 204, 255)">pink</option>
+            <option value="rgb(155, 155, 155)">light grey</option>
+            <option value="rgb(255, 255, 255)">white</option>
+        </select>
+
+        <!-- 询问是否画大象 -->
+        <div id="drawByMouse">
+            <canvas id="originality"></canvas>
+        </div>
+        <div id="questionBox">Tell us about your elephant in the room, something so terrifying that is causing such
+            major
+            stress that you dare not confront
+        </div>
+        <button id="Join">Ok</button>
+        <button id="Cancel">Cancel</button>
+    </div>
+
+    <script>
+        const loadingTextProgress = document.querySelector('#loading-text-progress')
+        const loadingScene = document.querySelector('#loading-scene')
+        const canvas = document.createElement('canvas')
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.body.appendChild(canvas)
+
+        // 顶部灯光
+        var topLight = [];
+        var topLightMesh = [];
+        var topLightColor = [
+            new BABYLON.Color3(1, 1, 0),
+            new BABYLON.Color3(1, 1, 0),
+            new BABYLON.Color3(1, 1, 0),
+            new BABYLON.Color3(1, 1, 0),
+            new BABYLON.Color3(1, 0, 1),
+            new BABYLON.Color3(1, 0, 1),
+            new BABYLON.Color3(1, 1, 1)
+        ];
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+                scene.render()
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var camera = null;
+
+        var createDefaultEngine = function () {
+            return new BABYLON.Engine(canvas, true, {
+                preserveDrawingBuffer: true,
+                stencil: true,
+                disableWebGL2Support: false
+            });
+        };
+
+        var mirrorRender = [];
+        var mirrorMesh;
+        var drawingPlane = null;
+        var throwPlane = null;
+        var cancelPlane = null;
+        var nearMenu = null;
+        var manager = null;
+        var panel = null;
+        var anchor = null;
+
+        var eleMesh = [];
+        var eleAction = [];
+        var joinInfo = null;
+        var joinBtn = null;
+        var cancelBtn = null;
+        var joinMorph = null;
+        var joinMorph2 = null;
+        var morphManager = null;
+        var points = [];
+        var drawPlane = null;
+        var drawPoints = [];
+        var drawPlaneTL = [];
+        var WH = null;
+        var WW = null;
+        var N_LAYERS = null;
+        var data = null;
+        var texArray = null;
+        var pixelGap = null;
+        var drawLineNow = [];
+        var drawAction = null;
+        var joinAction = null;
+        var clearAction = null;
+        var throwAction = null;
+        var isClear = false;
+
+        var progress = "0%";
+        var progressDiv = null;
+
+        var startPaths = [];
+        var endPaths = [];
+        var endPathsNew = [];
+        var spherePaths = [];
+        var sideO = null;
+        var ribbon = null;
+        var ribbon2 = null;
+        var isBall = false;
+        let controlModel = null
+        // 保存canvas图片信息
+        var imgdata = null
+        let controlJustice = 0
+        // 下载主模型
+        const download = document.querySelector('#download')
+        download.addEventListener('click', () => {
+            var link = document.createElement('a');
+            link.href = '/scenes/mainroom'; 
+            link.download = 'elephant.glb'; 
+            link.click();
+        })
+
+        BABYLON.DefaultLoadingScreen.prototype.displayLoadingUI = function () {
+            if (document.getElementById("customLoadingScreenDiv")) {
+                // Do not add a loading screen if there is already one
+                document.getElementById("customLoadingScreenDiv").style.display = "initial";
+                return;
+            }
+            this._loadingDiv = document.createElement("div");
+            progressDiv = this._loadingDiv;
+            this._loadingDiv.id = "customLoadingScreenDiv";
+            // this._loadingDiv.innerHTML = "scene is currently loading " + progress;
+            var customLoadingScreenCss = document.createElement('style');
+            customLoadingScreenCss.type = 'text/css';
+            document.getElementsByTagName('head')[0].appendChild(customLoadingScreenCss);
+            this._resizeLoadingUI();
+            window.addEventListener("resize", this._resizeLoadingUI);
+            document.body.appendChild(this._loadingDiv);
+        };
+
+        BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI = function () {
+            document.getElementById("customLoadingScreenDiv").style.display = "none";
+        }
+
+        function registerEleAction() {
+            for (var i = 0; i < eleMesh.length; i++) {
+                eleMesh[i].actionManager.registerAction(eleAction[i]);
+            }
+        }
+
+
+        const notify = document.getElementById('notify');
+        const entrytip = document.querySelectorAll('#entrytip');
+        const leftbutton = document.querySelectorAll('#leftbutton');
+        const rightbutton = document.querySelectorAll('#rightbutton');
+
+        var delayCreateScene = function () {
+
+            engine.displayLoadingUI();
+            var scene = new BABYLON.Scene(engine);
+
+            /* scene.freezeActiveMeshes();
+            scene.blockMaterialDirtyMechanism = true; */
+
+            // 回到原点
+            sessionStorage.clear()
+
+            camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(-7, -1.715, -17), scene);
+            // Targets the camera to scene origin
+
+            // 获取相机位置的字符串
+            var savedCameraPositionString = sessionStorage.getItem('cameraPosition');
+            // 获取相机目标位置的字符串
+            var savedCameraTargetString = sessionStorage.getItem('cameraTarget');
+
+            // 解析字符串为相机位置数组和相机目标位置数组
+            var savedCameraPositionArray = JSON.parse(savedCameraPositionString);
+            var savedCameraTargetArray = JSON.parse(savedCameraTargetString);
+
+            // 设置相机的位置和目标位置
+            if (savedCameraPositionArray && savedCameraPositionArray.length === 3) {
+                camera.position = new BABYLON.Vector3(
+                    savedCameraPositionArray[0],
+                    savedCameraPositionArray[1],
+                    savedCameraPositionArray[2]
+                );
+            } else {
+                camera.position = new BABYLON.Vector3(-27, -1.85, -20.119)
+            }
+            if (savedCameraTargetArray && savedCameraTargetArray.length === 3) {
+                camera.setTarget(new BABYLON.Vector3(
+                    savedCameraTargetArray[0],
+                    savedCameraTargetArray[1],
+                    savedCameraTargetArray[2]
+                ));
+            } else {
+                camera.setTarget(new BABYLON.Vector3(-6, -1.715, -16.5));
+            }
+
+            // This attaches the camera to the canvas
+            camera.attachControl(canvas, true);
+            camera.fov = Math.PI / 4;
+            camera.minZ = 0.5;
+
+            // // Creates a light, aiming 0,1,0 - to the sky
+            const hLight1 = new BABYLON.DirectionalLight("hLight1", new BABYLON.Vector3(1, -1, -1), scene);
+            // // Dim the light a small amount - 0 to 1
+            hLight1.intensity = 0.6;
+            // const shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+            // shadowGenerator.useExponentialShadowMap = true;
+            const hLight2 = new BABYLON.DirectionalLight("hLight2", new BABYLON.Vector3(-1, 1, 1), scene);
+            // // Dim the light a small amount - 0 to 1
+            hLight2.intensity = 0.8;
+            // var shadowGenerator = new BABYLON.ShadowGenerator(1024, hLight1);
+
+            // 自发光网格
+            let gl = new BABYLON.GlowLayer('g', scene, {
+                mainTextureFixedSize: 1024,
+                blurKernelSize: 32,
+                mainTextureSamples: 0
+            });
+            gl.intensity = 0.2;
+
+            camera.ellipsoid = new BABYLON.Vector3(4, 8, 4);
+            camera.ellipsoidOffset = new BABYLON.Vector3(0, 5, 0);
+
+            const createObstacle = (name, position, scaling) => {
+                const obstacle = BABYLON.MeshBuilder.CreateBox(name, { size: 2 }, scene);
+                obstacle.position = position;
+                obstacle.scaling = scaling;
+                obstacle.visibility = false;
+                return obstacle;
+            };
+
+            // 后期滤镜开始于此
+            var bgCamera = new BABYLON.ArcRotateCamera("BGCamera", Math.PI / 2 + Math.PI / 7, Math.PI / 2, 100,
+                new BABYLON.Vector3(0, 20, 0),
+                scene);
+            bgCamera.layerMask = 0x10000000;
+
+            var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            advancedTexture.layer.layerMask = 0x10000000;
+            advancedTexture.renderScale = 1.5;
+
+            var defaultPipeline = new BABYLON.DefaultRenderingPipeline("default", true, scene, [camera]);
+            var curve = new BABYLON.ColorCurves();
+            curve.globalHue = 200;
+            curve.globalDensity = 80;
+            curve.globalSaturation = 80;
+            curve.highlightsHue = 20;
+            curve.highlightsDensity = 80;
+            curve.highlightsSaturation = -80;
+            curve.shadowsHue = 2;
+            curve.shadowsDensity = 80;
+            curve.shadowsSaturation = 40;
+            defaultPipeline.imageProcessing.colorCurves = curve;
+            defaultPipeline.depthOfField.focalLength = 150;
+
+            defaultPipeline.samples = 4 // 打开为4，关闭为0
+            defaultPipeline.fxaaEnabled = true;// 打开为true，关闭为false
+            defaultPipeline.bloomEnabled = true;// 打开为true，关闭为false
+            defaultPipeline.bloomKernel = 1;// 最小1，最大500
+            defaultPipeline.bloomWeight = .5;// 最小0，最大1
+            defaultPipeline.bloomThreshold = .5;// 最小0，最大1
+            defaultPipeline.bloomScale = 0;// 最小0，最大1
+            // defaultPipeline.depthOfFieldEnabled = true;// 打开为true，关闭为false
+            // defaultPipeline.depthOfFieldBlurLevel = 0;
+            // defaultPipeline.depthOfField.focusDistance = 1;// 最小1，最大50000
+            // defaultPipeline.depthOfField.fStop = 1;// 最小1，最大10
+            // defaultPipeline.depthOfField.focalLength = 1;// 最小1，最大300
+            defaultPipeline.chromaticAberrationEnabled = true;// 打开为true，关闭为false
+            defaultPipeline.chromaticAberration.aberrationAmount = 5;// 最小-1000，最大1000
+            defaultPipeline.chromaticAberration.radialIntensity = 0.1;// 最小0.1，最大5
+            defaultPipeline.chromaticAberration.direction.x = 1;
+            defaultPipeline.chromaticAberration.direction.y = 1;
+            defaultPipeline.grainEnabled = true;// 打开为true，关闭为false
+            defaultPipeline.grain.intensity = 5;// 最小0，最大100
+            defaultPipeline.grain.animated = true;// 打开为true，关闭为false
+            // 后期滤镜结束于此
+
+
+            // 进入房间时的交互
+            const obstaclePositions = [
+                { position: new BABYLON.Vector3(-34, -10.5, -42), scaling: new BABYLON.Vector3(0.1, 0.1, 0.1) },
+                { position: new BABYLON.Vector3(-20, -10.5, -62), scaling: new BABYLON.Vector3(0.1, 0.1, 0.1) },
+                { position: new BABYLON.Vector3(-43, -10.5, -70), scaling: new BABYLON.Vector3(0.1, 0.1, 0.1) },
+                { position: new BABYLON.Vector3(-52, -10.5, -62), scaling: new BABYLON.Vector3(0.1, 0.1, 0.1) },
+                { position: new BABYLON.Vector3(-2, 0, 20), scaling: new BABYLON.Vector3(4, 4, 0.5) }
+            ];
+
+            const obstacles = obstaclePositions.map(obstacle => {
+                return createObstacle('obstacle', obstacle.position, obstacle.scaling);
+            });
+
+
+            // 设置无法进入厨房区域
+            const obstacleTwo = BABYLON.MeshBuilder.CreateBox('obstacleTwo', { size: 2 }, scene)
+            obstacleTwo.position = new BABYLON.Vector3(-2, -10, 20)
+            obstacleTwo.scaling = new BABYLON.Vector3(4, 4, 0.5)
+            obstacleTwo.checkCollisions = true
+            obstacleTwo.visibility = false
+
+            // 大象左边耳朵碰撞
+            const obstacleThree = BABYLON.MeshBuilder.CreateBox('obstacleThree', { size: 2 }, scene)
+            obstacleThree.position = new BABYLON.Vector3(21, -11, -5)
+            obstacleThree.scaling = new BABYLON.Vector3(15, 0.1, 15)
+            obstacleThree.checkCollisions = true
+            obstacleThree.visibility = false
+
+            // 判断是哪个门触发的确认按钮
+            let whichDoor = -1;
+            let doorIndex = 1;
+            var notAvailableDoor;
+            let wildAnimalDoor;
+            let domesticatedAnimalDoor;
+            let notAnAnimalDoor;
+
+            function doorTips(scene) {
+                let material = new BABYLON.StandardMaterial("material", scene);
+                material.emissiveColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                material.opacity = 0.5;
+                material.alpha = 0.5;
+                material.reflectivity = 0;
+                return material;
+            }
+
+            scene.registerBeforeRender(function () {
+                let shortestDistance = Infinity;
+
+                for (let i = 0; i < obstacles.length; i++) {
+                    const distance = BABYLON.Vector3.Distance(camera.position, obstacles[i].position);
+                    // 厨房位置
+                    if (i == 4 && distance <= 12) {
+                        notify.style.display = 'block'
+                        whichDoor = i
+                    }
+                    if (i != 4 && distance <= 12) {
+                        whichDoor = i
+                    }
+
+                    if (whichDoor == 0 && distance <= 12 && doorIndex == 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "main-bath-door.glb", scene, async function (meshes, particleSystems, skeletons) {
+                            meshes.forEach((mesh) => {
+                                if (mesh.name == '物件_1086.001') {
+                                    mesh.material = doorTips(scene)
+                                    notAvailableDoor = mesh
+                                }
+                            })
+                        }, checkCollisions = true)
+                        doorIndex = 2
+                        for (let i = 0; i < entrytip.length; i++) {
+                            entrytip[i].style.display = 'none';
+                        }
+                        setTimeout(() => {
+                            entrytip[whichDoor].style.display = 'block';
+                        }, 200)
+                    }
+                    if (whichDoor == 1 && distance <= 12 && doorIndex == 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "scene1out-door.glb", scene, async function (meshes, particleSystems, skeletons) {
+                            meshes.forEach((mesh) => {
+                                if (mesh.name == '物件_1086') {
+                                    mesh.material = doorTips(scene)
+                                    wildAnimalDoor = mesh
+                                }
+                            })
+                        }, checkCollisions = true)
+                        doorIndex = 2
+                        for (let i = 0; i < entrytip.length; i++) {
+                            entrytip[i].style.display = 'none';
+                        }
+                        setTimeout(() => {
+                            entrytip[whichDoor].style.display = 'block';
+                        }, 200)
+                    }
+                    if (whichDoor == 2 && distance <= 12 && doorIndex == 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "scene2out-door.glb", scene, async function (meshes, particleSystems, skeletons) {
+                            meshes.forEach((mesh) => {
+                                if (mesh.name == '物件_1086.003') {
+                                    mesh.material = doorTips(scene)
+                                    mesh.position.z = 16.14
+                                    domesticatedAnimalDoor = mesh
+                                }
+                            })
+                        }, checkCollisions = true)
+                        doorIndex = 2
+                        for (let i = 0; i < entrytip.length; i++) {
+                            entrytip[i].style.display = 'none';
+                        }
+                        setTimeout(() => {
+                            entrytip[whichDoor].style.display = 'block';
+                        }, 200)
+                    }
+                    if (whichDoor == 3 && distance <= 12 && doorIndex == 1) {
+                        BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "scene3out-door.glb", scene, async function (meshes, particleSystems, skeletons) {
+                            meshes.forEach((mesh) => {
+                                if (mesh.name == '物件_1086.004') {
+                                    mesh.material = doorTips(scene)
+                                    notAnAnimalDoor = mesh
+                                }
+                            })
+                        }, checkCollisions = true)
+                        doorIndex = 2
+                        for (let i = 0; i < entrytip.length; i++) {
+                            entrytip[i].style.display = 'none';
+                        }
+                        setTimeout(() => {
+                            entrytip[whichDoor].style.display = 'block';
+                        }, 200)
+                    }
+
+                    shortestDistance = Math.min(shortestDistance, distance);
+                }
+                if (shortestDistance > 13.5) {
+                    notAvailableDoor == null ? null : notAvailableDoor.isVisible = false;
+                    wildAnimalDoor == null ? null : wildAnimalDoor.isVisible = false;
+                    domesticatedAnimalDoor == null ? null : domesticatedAnimalDoor.isVisible = false;
+                    notAnAnimalDoor == null ? null : notAnAnimalDoor.isVisible = false;
+                    doorIndex = 1
+                    notify.style.display = 'none';
+                    for (i = 0; i < entrytip.length; i++) {
+                        entrytip[i].style.display = 'none';
+                    }
+                }
+                if (camera.position.y < 1.5) {
+                    camera.position.y = 1.5;
+                }
+            });
+            // 取消按钮的回调
+            for (let i = 0; i < rightbutton.length; i++) {
+                rightbutton[i].addEventListener('click', () => {
+                    for (let j = 0; j < entrytip.length; j++) {
+                        entrytip[j].style.display = 'none';
+                    }
+                })
+            }
+
+            // 根据不同的门来让leftbutton来执行不同的程序
+            for (i = 0; i < leftbutton.length; i++) {
+                leftbutton[i].addEventListener('click', function (event) {
+                    if (whichDoor == 1) {
+                        // 存储相机位置
+                        var cameraPosition = camera.position.asArray();
+                        console.log(cameraPosition);
+                        sessionStorage.setItem('cameraPosition', JSON.stringify(cameraPosition));
+
+                        // 存储相机目标位置
+                        var cameraTarget = camera.target.asArray();
+                        sessionStorage.setItem('cameraTarget', JSON.stringify(cameraTarget));
+
+                        window.location.href = 'scene1.html'
+                    } else if (whichDoor == 2) {
+                        // 存储相机位置
+                        var cameraPosition = camera.position.asArray();
+                        sessionStorage.setItem('cameraPosition', JSON.stringify(cameraPosition));
+
+                        // 存储相机目标位置
+                        var cameraTarget = camera.target.asArray();
+                        sessionStorage.setItem('cameraTarget', JSON.stringify(cameraTarget));
+
+                        window.location.href = 'scene2.html'
+                    } else if (whichDoor == 3) {
+                        // 存储相机位置
+                        var cameraPosition = camera.position.asArray();
+                        sessionStorage.setItem('cameraPosition', JSON.stringify(cameraPosition));
+
+                        // 存储相机目标位置
+                        var cameraTarget = camera.target.asArray();
+                        sessionStorage.setItem('cameraTarget', JSON.stringify(cameraTarget));
+
+                        window.location.href = 'scene3.html'
+                    } else {
+                        // window.location.href = 'scene3.html'
+                        console.log('厕所');
+                        doorIndex = 1
+                        entrytip[whichDoor].style.display = 'none';
+                    }
+                })
+            }
+
+            // 启用调试检查器
+            if (BABYLON.Tools.IsWindowObjectExist()) {
+                window.addEventListener("keydown", (ev) => {
+                    // 按下Ctrl+Shift+Alt+C启动相机参数查看器
+                    if (ev.ctrlKey && ev.shiftKey && ev.altKey && ev.keyCode === 67) {
+                        if (!scene.debugLayer.isVisible()) {
+                            scene.debugLayer.show();
+                        }
+                        scene.debugLayer.select(tab => tab.tab === 'Cameras');
+                    }
+                });
+            }
+
+            // scene.gravity = new BABYLON.Vector3(0, -9.81, 0);
+            // camera.applyGravity = true;
+
+            // pipeline
+            // var pipeline = new BABYLON.DefaultRenderingPipeline(
+            //   "defaultPipeline", // The name of the pipeline
+            //   true, // Do you want the pipeline to use HDR texture?
+            //   scene, // The scene instance
+            //   [camera] // The list of cameras to be attached to
+            // );
+            // pipeline.samples = 4;
+            // pipeline.fxaaEnabled = true;
+            // pipeline.sharpenEnabled = true;
+            var lightHeight = 12;
+            topLight[0] = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(-8, lightHeight, -17), scene);
+            topLight[0].range = 40;
+            topLight[0].diffuse = topLightColor[6];
+            topLight[0].intensity = 0.2
+            // console.log('22222222222222',topLightColor[0])
+            // topLight[0].specular = topLightColor[0];
+            topLight[0].falloffType = 3;
+            topLight[1] = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(11, lightHeight, -17), scene);
+            topLight[1].range = 40;
+            topLight[1].diffuse = topLightColor[6];
+            topLight[1].intensity = 0.2
+            // topLight[1].specular = topLightColor[1];
+            topLight[1].falloffType = 3;
+            topLight[2] = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(-8, lightHeight, 4), scene);
+            topLight[2].range = 40;
+            topLight[2].diffuse = topLightColor[6];
+            topLight[2].intensity = 0.2
+            // topLight[2].specular = topLightColor[2];
+            topLight[2].falloffType = 3;
+            topLight[3] = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(11, lightHeight, 4), scene);
+            topLight[3].range = 40;
+            topLight[3].diffuse = topLightColor[6];
+            topLight[3].intensity = 0.2
+            // topLight[3].specular = topLightColor[3];
+            topLight[3].falloffType = 3;
+            topLight[4] = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(46, lightHeight, -17), scene);
+            topLight[4].range = 40;
+            topLight[4].diffuse = topLightColor[6];
+            topLight[4].intensity = 0.2
+            // topLight[4].specular = topLightColor[4];
+            topLight[4].falloffType = 3;
+            topLight[5] = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(46, lightHeight, 4), scene);
+            topLight[5].range = 40;
+            topLight[5].diffuse = topLightColor[6];
+            topLight[5].intensity = 0.2
+            // topLight[5].specular = topLightColor[5];
+            topLight[5].falloffType = 3;
+
+            // 顶部灯光的代码（请保留）
+            // for (var i=0; i<6; i++) {
+            //     topLight[i].intensity = 0;
+            // }
+            // const shadowGenerator1 = new BABYLON.ShadowGenerator(1024, light1);
+            // shadowGenerator1.useExponentialShadowMap = true;
+            // const shadowGenerator2 = new BABYLON.ShadowGenerator(1024, light2);
+            // shadowGenerator2.useExponentialShadowMap = true;
+            // const shadowGenerator3 = new BABYLON.ShadowGenerator(1024, light3);
+            // shadowGenerator3.useExponentialShadowMap = true;
+            // const shadowGenerator4 = new BABYLON.ShadowGenerator(1024, light4);
+            // shadowGenerator4.useExponentialShadowMap = true;
+            // shadowGenerator4.usePoissonSampling = true;
+            // const shadowGenerator5 = new BABYLON.ShadowGenerator(1024, light5);
+            // shadowGenerator5.useExponentialShadowMap = true;
+
+
+            scene.useRightHandedSystem = true;
+            BABYLON.OBJFileLoader.INVERT_Y = false;
+
+            // 窗子贴图部分的代码
+            const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+            skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+            const skyboxTexture = new BABYLON.CubeTexture("./textures/skybox", scene, ["-px.png", "-py.png", "-pz.png", "-nx.png", "-ny.png", "-nz.png"]);
+            skyboxMaterial.reflectionTexture = skyboxTexture;
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
+            skybox.material = skyboxMaterial;
+
+            // setUnderConstruction(scene);
+            // skybox.visibility = false;
+
+            // 解决两个模型同步加载的问题
+            function loadModelOne() {
+
+                BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "scene-index.glb", scene, async function (meshes, particleSystems, skeletons) {
+                    scene.addCamera(camera);
+                    scene.createDefaultEnvironment();
+                    scene.collisionsEnabled = true;
+                    // scene.checkCollisions = true;
+                    // camera.checkCollisions = true;
+                    camera.speed = 0.4;
+                    camera.inverseRotationSpeed = 1;
+                    // console.log('111',meshes.name);
+
+                    // 添加碰撞事件
+                    camera.checkCollisions = true;
+                    camera.applyGravity = true;
+                    // 相机碰撞事件的回调
+                    /* camera.onCollide = function(collidedMesh) {
+                        console.log("碰撞到物体: " + camera.position);
+                    }; */
+
+                    /* // 设置相机的位置不能向上移动
+                    let cameraControls = new BABYLON.FreeCameraMouseInput()
+                    camera.inputs.add(cameraControls)
+                    cameraControls.onPointerMove = function (event, offsetX, offsetY) {
+                        if (offsetY > 0) {
+                            offsetY = 0
+                        }
+                    } */
+
+                    // mirror镜面
+                    // var probe = new BABYLON.ReflectionProbe("main", 512, scene);
+                    // probe.renderList.push(thesphere);
+                    var meshNum = 0;
+                    var mirror;
+                    // await Ammo();
+                    // scene.enablePhysics(null, new BABYLON.AmmoJSPlugin());
+
+                    // 动画
+                    /* const skeleton = skeletons[0]
+                    const animationGroup = skeleton.animationGroups[0];
+                    animationGroup.start(true); */
+                    meshes.isPickable = false;
+                    meshes.doNotSyncBoundingInfo = true;
+
+                    meshes.forEach((mesh) => {
+                        // shadowGenerator1.getShadowMap().renderList.push(mesh);
+                        // shadowGenerator2.getShadowMap().renderList.push(mesh);
+                        // shadowGenerator3.getShadowMap().renderList.push(mesh);
+                        // shadowGenerator4.getShadowMap().renderList.push(mesh);
+                        // shadowGenerator5.getShadowMap().renderList.push(mesh);
+                        // shadowGenerator.getShadowMap().renderList.push(mesh);
+
+                        mesh.receiveShadows = true;
+                        // reflection.renderList.push(mesh);
+                        mesh.receiveShadows = true;
+                        // mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.0, restitution: 0.7}, scene);
+                        mesh.checkCollisions = true;
+                        // transparency
+                        // mesh.visibility = 0;
+                        // mesh.name[2]='7白色灯面'
+                        if (mesh.name === "7白色灯面") {
+                            mesh.material.emissiveColor = { r: 1, g: 1, b: 1 };
+                            // 走廊轨道灯
+                        }
+                        if (mesh.name === "15变化灯面A") {
+                            mesh.material.emissiveColor = { r: 0, g: 0, b: 0 };
+                            topLightMesh[0] = mesh;
+                            // console.log(topLightColor[0])
+                        }
+                        if (mesh.name === "15变化灯面B") {
+                            mesh.material.emissiveColor = { r: 0, g: 0, b: 0 };
+                            topLightMesh[1] = mesh;
+                        }
+                        if (mesh.name === "15变化灯面C") {
+                            mesh.material.emissiveColor = { r: 0, g: 0, b: 0 };
+                            topLightMesh[2] = mesh;
+                        }
+                        if (mesh.name === "15变化灯面D") {
+                            mesh.material.emissiveColor = { r: 0, g: 0, b: 0 };
+                            topLightMesh[3] = mesh;
+                        }
+                        if (mesh.name === "15变化灯面E") {
+                            mesh.material.emissiveColor = { r: 0, g: 0, b: 0 };
+                            topLightMesh[4] = mesh;
+                        }
+                        if (mesh.name === "15变化灯面F") {
+                            mesh.material.emissiveColor = { r: 0, g: 0, b: 0 };
+                            topLightMesh[5] = mesh;
+                        }
+                        if (mesh.name === '物件_31.002') {
+                            // 给墙面添加动态动画效果
+                            var videoMaterial = new BABYLON.StandardMaterial("videoMaterial", scene);
+                            // 视频镜面翻转一下才行
+                            var videoTexture = new BABYLON.VideoTexture("videoTexture", ["./textures/ele-tele_640.mp4"], scene, true);
+                            videoMaterial.diffuseTexture = videoTexture;
+                            mesh.material = videoMaterial;
+                        }
+                        if (mesh.name === "8镜面玻璃") {
+                            var material = new BABYLON.PBRMaterial("glassMaterial", scene);
+                            mesh.material.reflectionTexture = new BABYLON.MirrorTexture("mirror", 4096, scene, true);
+                            var yNum = 20;
+                            mesh.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(new BABYLON.Vector3(-96, 103.87355041503906, 18), new BABYLON.Vector3(0, 0, 1));
+                            mesh.material.reflectionTexture.level = 0.5;
+                            mesh.material.metallic = 1;
+                            mesh.material.roughness = 0.2;
+                            mesh.material.alpha = 0.68
+                            mirrorMesh = mesh;
+                        } else {
+                            mirrorRender.push(mesh);
+                        }
+                        meshNum++;
+                        if (meshNum === meshes.length) {
+                            // console.log(mirrorRender);
+                            mirrorMesh.material.reflectionTexture.renderList = mirrorRender;
+                            // the part causing errors
+                        }
+
+                        if (mesh.material) {
+                            mesh.material.maxSimultaneousLights = 8;
+                        }
+                    });
+                    // scene.environmentTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("textures/environment.env", scene);
+                    scene.environmentTexture = new BABYLON.CubeTexture.CreateFromPrefilteredData("./lib/environmentSpecular.env", scene);//https://assets.babylonjs.com/environments/environmentSpecular.env
+
+                    engine.hideLoadingUI();
+
+                }, (e) => {
+                    var loadedNum = e.loaded;
+                    var totalNum = e.total;
+                    progress = parseInt(100 * loadedNum / totalNum).toString() + "%";
+                    loadingTextProgress.innerHTML = "while we are building the SXSY Cloud Gallery & the exhibition...<br><br>" + progress;
+                    // progress == '100%' ? loadingScene.setAttribute("class", "loading-scene-progress") : null
+                    progress == '100%' ? setTimeout(() => loadingScene.style.display = 'none', 4500) : null
+
+                }, checkCollisions = true)
+            }
+
+            function loadModelTwo() {
+                BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "elephant.glb", scene, async function (meshes, particleSystems, skeletons) {
+                    await Ammo();
+                    scene.enablePhysics(null, new BABYLON.AmmoJSPlugin());
+                    var meshNum = 0;
+                    var materialMesh = meshes[0];
+                    modelMeshes = meshes;
+
+                    modelMeshes.forEach((mesh) => {
+                        // mesh.material = new BABYLON.StandardMaterial("eleMat", scene);
+                        //action manager
+                        mesh.actionManager = new BABYLON.ActionManager(scene);
+                        eleAction[meshNum] = mesh.actionManager.registerAction(
+                            new BABYLON.ExecuteCodeAction(
+                                BABYLON.ActionManager.OnPickTrigger,
+                                (e) => {
+                                    setUpJoin();
+                                    // var pickInfo = scene.pick(scene.pointerX, scene.pointerY, false, false, camera);
+                                    // console.log(pickInfo.pickedPoint);
+                                }
+                            )
+                        );
+
+                        mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }, scene);
+                        mesh.checkCollisions = true;
+                        // mesh.visibility = 0.8;
+                        mirrorRender.push(mesh);
+                        eleMesh[meshNum] = mesh;
+                        meshNum++;
+                        if (meshNum === meshes.length) {
+                            mirrorMesh.material.reflectionTexture.renderList = mirrorRender;
+                            for (var i = 0; i < 6; i++) {
+                                topLight[i].excludedMeshes = eleMesh;
+                            }
+                        }
+                    });
+                    return changeTexture
+                }, checkCollisions = true)
+            }
+
+            // 读取猴子模型
+            BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "monkey.glb", scene, function (meshes, particleSystems, skeletons) {
+                // 创建平行光1，从上方照射
+                var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+                light1.diffuse = new BABYLON.Color3(1, 1, 1);
+
+                // 设置环境光
+                scene.ambientColor = new BABYLON.Color3(1, 1, 1);
+            }, checkCollisions = true);
+
+            // // 增加大象地面文字模型
+            // BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "ele-text.glb", scene, function (meshes, particleSystems, skeletons) {
+            //     // 创建平行光1，从上方照射
+            //     var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+            //     light1.diffuse = new BABYLON.Color3(1, 1, 1);
+
+            //     // 设置环境光
+            //     scene.ambientColor = new BABYLON.Color3(1, 1, 1);
+            // }, checkCollisions = true);
+
+            function asyncLoadModel() {
+                return new Promise((resolve, reject) => {
+                    try {
+                        loadModelTwo()
+                        loadModelOne()
+                        resolve()
+                    } catch (err) {
+                        console.log('loading failure', err)
+                        reject()
+                    }
+                })
+            }
+
+            async function loadSceen() {
+                await asyncLoadModel()
+            }
+
+            loadSceen()
+            // 模型太大，异步加载也会有延迟，场景和大象不能同时出现
+            // initHelp(scene);
+            return scene;
+        };
+
+        function setUpJoin() {
+            const animationBox = document.getElementById("animationBox")
+            const questionBox = document.getElementById("questionBox");
+            const boxJoin = document.getElementById("Join");
+            const boxCancel = document.getElementById("Cancel");
+            const drawByMouse = document.getElementById("drawByMouse")
+            const originalityCanvas = document.getElementById('originality')
+            const selectColor = document.getElementById('selectColor')
+            const penWidth = document.getElementById('penWidth')
+            const clean = document.getElementById('clean')
+            const author = document.getElementById('author')
+            const composition = document.getElementById('composition')
+
+            let controlDraw = -1
+
+            if (!questionBox.style.display || questionBox.style.display === 'none') {
+                questionBox.style.display = 'block'
+                boxJoin.style.display = 'block'
+                boxCancel.style.display = 'block'
+                boxJoin.style.left = '58%'
+                boxCancel.style.left = '58%'
+                whoosh.play();
+            }
+
+            boxCancel.addEventListener('click', function () {
+                questionBox.style.display = 'none'
+                boxCancel.style.display = 'none'
+                boxJoin.style.display = 'none'
+                drawByMouse.style.display = 'none'
+                selectColor.style.display = 'none'
+                penWidth.style.display = 'none'
+                clean.style.display = 'none'
+                author.style.display = 'none'
+                composition.style.display = 'none'
+                controlDraw = -2
+                whoosh.play();
+            })
+
+            boxJoin.addEventListener('click', function Join() {
+                if (controlDraw == -2) {
+                    boxJoin.removeEventListener('click', Join)
+                    controlDraw = -1
+                }
+
+                if (controlDraw === -1) {
+                    questionBox.style.display = 'none'
+                    drawByMouse.style.display = 'block'
+                    whoosh.play();
+                    boxJoin.style.display = 'block'
+                    boxCancel.style.display = 'block'
+                    boxJoin.style.left = '74vw'
+                    boxCancel.style.left = '74vw'
+                    selectColor.style.display = 'block'
+                    penWidth.style.display = 'block'
+                    selectColor.style.display = 'block'
+                    clean.style.display = 'block'
+                    author.style.display = 'block'
+                    composition.style.display = 'block'
+
+                    originalityCanvas.style.width = '70vh'
+                    originalityCanvas.style.height = '70vh'
+                    originalityCanvas.style.border = 'block'
+                    drawByMouse.style.width = '70vh'
+                    drawByMouse.style.height = '70vh'
+                    drawByMouse.style.border = 'block'
+
+                    resetPenWidth()
+                    clearCanvas()
+                    controlDraw = 0
+                } else {
+                    // function getLocation() {
+                    //     if ('geolocation' in navigator) {
+                    //         navigator.geolocation.getCurrentPosition(function (position) {
+                    //             var latitude = position.coords.latitude; // 纬度
+                    //             var longitude = position.coords.longitude; // 经度
+                    //             console.log("Current location: latiitude " + latitude + ", longitude " + longitude);
+                    //             // 在这里可以进行进一步的操作，如显示在页面上或发送给后端
+                    //         });
+                    //     } else {
+                    //         console.log("Your bowser doesnt support location services");
+                    //     }
+                    // }
+
+                    // getLocation()
+
+                    const message = []
+
+                    if (!author.value || !composition.value) {
+                        alert('Please fill in the title & your name')
+                        return
+                    } else {
+                        setTimeout(() => {
+                            // 将canvas的图片转为base64
+                            var imgdata = originalityCanvas.toDataURL();
+                            if (controlJustice === 1) {
+                                console.log('进入分支')
+                                scene.removeMesh(controlModel)
+                                controlModel.dispose()
+                                controlModel = null
+                            }
+                            // 创建纹理对象
+                            var dynamicTexture = new BABYLON.Texture(imgdata, scene, true, true, BABYLON.Texture.BILINEAR_SAMPLINGMODE);
+                            dynamicTexture.hasAlpha = true; // 设置纹理具有透明度
+
+
+                            // 加载另一个模型并将其重叠在原模型上
+                            BABYLON.SceneLoader.ImportMesh("", "scenes/mainroom/", "elephant-new.glb", scene, function (materialMeshes) {
+                                controlModel = materialMeshes[0]
+                                controlJustice = 1
+                                materialMeshes.forEach(function (mesh) {
+                                    var material = new BABYLON.StandardMaterial("eleMat", scene);
+                                    material.diffuseColor = new BABYLON.Color4(1, 1, 1, 1)
+                                    material.diffuseTexture = dynamicTexture;
+                                    material.diffuseTexture.hasAlpha = true; // 设置材质贴图具有透明度
+                                    material.alpha = 1; // 调整材质的透明度，可以根据需求进行调整
+                                    material.depthWrite = false
+                                    material.alphaMode = BABYLON.Engine.ALPHA_COMBINE; // 修改混合模式
+
+                                    mesh.material = material;
+                                });
+
+                                // 监听纹理加载完成事件
+                                dynamicTexture.onLoadObservable.addOnce(function () {
+                                    // 渲染场景
+                                    engine.runRenderLoop(function () {
+                                        scene.render();
+                                    });
+                                });
+                            });
+
+                            const msgObj = {
+                                compositionName: '',
+                                authorName: '',
+                                latitude: '',
+                                longitude: ''
+                            }
+                            msgObj.compositionName = composition.value
+                            msgObj.authorName = author.value
+                            message.push(msgObj)
+                            composition.value = ''
+                            author.value = ''
+
+                            console.log(message)
+                            controlDraw = -1
+                        }, 5000);
+                    }
+
+                    // 这里需要加动画效果
+                    originalityCanvas.style.width = '0'
+                    originalityCanvas.style.height = '0'
+                    originalityCanvas.style.border = 'none'
+                    drawByMouse.style.width = '0'
+                    drawByMouse.style.height = '0'
+                    drawByMouse.style.border = 'none'
+                    selectColor.style.display = 'none'
+                    boxJoin.style.display = 'none'
+                    boxCancel.style.display = 'none'
+                    penWidth.style.display = 'none'
+                    clean.style.display = 'none'
+                    author.style.display = 'none'
+                    composition.style.display = 'none'
+                    setTimeout(() => {
+                        animationBox.style.display = 'block'
+                    }, 3000);
+                    setTimeout(() => {
+                        animationBox.style.display = 'none'
+                        putSphere()
+                    }, 5500);
+                }
+                if (controlDraw != -1) return
+                else {
+                    boxJoin.removeEventListener('click', Join)
+                }
+            })
+
+            // 画布canvas
+            /* const ctx = originalityCanvas.getContext('2d')  //获取canvas画布的上下文
+            let isDrawing = false; */
+
+            const ctx = originalityCanvas.getContext('2d');
+            let isDrawing = false;
+
+            // 设置绘图样式
+            let penWidthLine = 20; // 初始笔画宽度
+
+            ctx.strokeStyle = 'black'; // 设置线条颜色为黑色
+            ctx.lineWidth = penWidthLine * window.devicePixelRatio; // 设置笔画宽度为物理像素
+            ctx.lineCap = 'round'; // 设置线段端点为圆形
+            ctx.lineJoin = 'round'; // 设置线段连接点为圆弧形状
+
+            selectColor.addEventListener('change', () => {
+                ctx.strokeStyle = selectColor.value;
+            });
+
+            penWidth.addEventListener('change', () => {
+                ctx.lineWidth = penWidth.value;
+            });
+
+            clean.addEventListener('click', () => {
+                clearCanvas();
+                beep.play();
+            });
+
+            // 鼠标按下时开始绘制
+            function startDrawing(event) {
+                isDrawing = true;
+                const rect = originalityCanvas.getBoundingClientRect(); // 获取Canvas相对于视口的位置
+                const scaleX = originalityCanvas.width / rect.width; // 计算水平缩放因子
+                const scaleY = originalityCanvas.height / rect.height; // 计算垂直缩放因子
+                const x = (event.clientX - rect.left) * scaleX; // 获取鼠标相对于Canvas的x坐标
+                const y = (event.clientY - rect.top) * scaleY; // 获取鼠标相对于Canvas的y坐标
+
+                ctx.beginPath();
+                ctx.moveTo(x, y); // 设置路径的起始点
+            }
+
+            // 绘制路径
+            function draw(event) {
+                if (!isDrawing) return;
+                ctx.lineCap = 'round'; // 设置线段端点为圆形
+                ctx.lineJoin = 'round'; // 设置线段连接点为圆弧形状
+                const rect = originalityCanvas.getBoundingClientRect(); // 获取Canvas相对于视口的位置
+                const scaleX = originalityCanvas.width / rect.width; // 计算水平缩放因子
+                const scaleY = originalityCanvas.height / rect.height; // 计算垂直缩放因子
+                const x = (event.clientX - rect.left) * scaleX; // 获取鼠标相对于Canvas的x坐标
+                const y = (event.clientY - rect.top) * scaleY; // 获取鼠标相对于Canvas的y坐标
+
+                // 绘制路径
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            }
+
+            // 停止绘制
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            // 清除画布
+            function clearCanvas() {
+                ctx.clearRect(0, 0, originalityCanvas.width, originalityCanvas.height);
+            }
+
+            // 设置鼠标事件监听器
+            originalityCanvas.addEventListener('mousedown', startDrawing);
+            originalityCanvas.addEventListener('mousemove', draw);
+            originalityCanvas.addEventListener('mouseup', stopDrawing);
+            originalityCanvas.addEventListener('mouseout', stopDrawing);
+
+            function resetPenWidth() {
+                const scaleFactor = window.devicePixelRatio;
+                const canvasWidth = originalityCanvas.clientWidth * scaleFactor;
+                const canvasHeight = originalityCanvas.clientHeight * scaleFactor;
+                originalityCanvas.width = canvasWidth;
+                originalityCanvas.height = canvasHeight;
+                ctx.lineWidth = penWidthLine * scaleFactor;
+            }
+        }
+
+        window.initFunction = async function () {
+            var asyncEngineCreation = async function () {
+                try {
+                    return createDefaultEngine();
+                } catch (e) {
+                    console.log("the available createEngine function failed. Creating the default engine instead");
+                    return createDefaultEngine();
+                }
+            }
+
+            window.engine = await asyncEngineCreation();
+            if (!engine) throw 'engine should not be null.';
+            startRenderLoop(engine, canvas);
+            window.scene = delayCreateScene();
+        };
+
+        initFunction().then(() => {
+            sceneToRender = scene
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+
+        function initHelp(scene) {
+            manager = new BABYLON.GUI.GUI3DManager();
+            // console.log(scene);
+            scene.createDefaultXRExperienceAsync().then((xr) => {
+                xr.baseExperience.camera.position = new BABYLON.Vector3(-5, 0, -5);
+                try {
+                    xr.baseExperience.featuresManager.enableFeature(BABYLON.WebXRFeatureName.HAND_TRACKING, "latest", { xrInput: xr.input });
+                } catch (err) {
+                    console.log("Articulated hand tracking not supported in this browser.");
+                }
+
+                // manager.useRealisticScaling = true;
+            });
+            manager.controlScaling = 0.05;
+            nearMenu = new BABYLON.GUI.NearMenu("nearMenu");
+            manager.addControl(nearMenu);
+            nearMenu.isPinned = true;
+            nearMenu.position.y = 0;
+            nearMenu.position.x = 14;
+            nearMenu.position.z = -22;
+            var button1 = new BABYLON.GUI.TouchHolographicButton();
+            nearMenu.addButton(button1);
+            button1.text = "Blue";
+        }
+
+        function changeColor(theLight, num, colors, name) {
+            var color = 0;
+            setInterval(() => {
+                if (num === 0) {
+                    if (color === 0) {
+                        theLight.diffuse = colors[0];
+                        color++;
+                    } else if (color === 1) {
+                        theLight.diffuse = colors[1];
+                        color++;
+                    } else {
+                        theLight.diffuse = colors[2];
+                        color = 0;
+                    }
+                    num = 1;
+                    console.log("change" + name);
+                } else {
+                    num = 0;
+                }
+            }, 1000);
+        }
+
+        // 让界面加载的时候切换顶部的灯光颜色为白色
+
+        // function switchLight(lightIndex) {
+        //     topLightColor[lightIndex] = new BABYLON.Color3(Math.random(1), Math.random(1), Math.random(1));
+        //     console.log(topLightColor[lightIndex]);
+        //     topLightMesh[lightIndex].material.emissiveColor = topLightColor[lightIndex];
+        //     topLight[lightIndex].diffuse = topLightColor[lightIndex];
+        // }
+
+        // function switchLight(isBack) {
+        //     if (isBack) {
+        //         var rgbFound = findColor(topLightColor[4].r, topLightColor[4].g, topLightColor[4].b);
+        //         console.log(rgbFound);
+        //         for (var i = 0; i < 4; i++) {
+        //             topLightColor[i] = new BABYLON.Color3(rgbFound[0], rgbFound[1], rgbFound[2]);
+        //             topLightMesh[i].material.emissiveColor = new BABYLON.Color3(rgbFound[0], rgbFound[1], rgbFound[2]);
+        //             topLight[i].diffuse = new BABYLON.Color3(rgbFound[0], rgbFound[1], rgbFound[2]);
+        //         }
+        //     } else {
+        //         var rgbFound = findColor(topLightColor[0].r, topLightColor[0].g, topLightColor[0].b);
+        //         console.log(rgbFound);
+        //         for (var i = 4; i < 6; i++) {
+        //             topLightColor[i] = new BABYLON.Color3(rgbFound[0], rgbFound[1], rgbFound[2]);
+        //             topLightMesh[i].material.emissiveColor = new BABYLON.Color3(rgbFound[0], rgbFound[1], rgbFound[2]);
+        //             topLight[i].diffuse = new BABYLON.Color3(rgbFound[0], rgbFound[1], rgbFound[2]);
+        //         }
+        //     }
+        // }
+
+        // function findColor(r, g, b) {
+        //     var lightness = Math.max(r, g, b);
+        //     var min = Math.min(r, g, b);
+        //     var perDegree = (lightness - min) / 60;
+        //     var randomDegree = 60 - Math.floor(Math.random() * 120);
+        //     if (r === lightness) {
+        //         if (g === min) {
+        //             var newR = r;
+        //             var newG = g;
+        //             var newB = b + randomDegree * perDegree;
+        //             if (newB > lightness) {
+        //                 newB = lightness;
+        //                 newR = r - (randomDegree - (lightness - b) / perDegree) * perDegree;
+        //             } else if (newB < min) {
+        //                 newB = min;
+        //                 newG = g - (randomDegree - (min - b) / perDegree) * perDegree;
+        //             }
+        //         } else {
+        //             var newR = r;
+        //             var newG = g + randomDegree * perDegree;
+        //             var newB = b;
+        //             if (newG > lightness) {
+        //                 newG = lightness;
+        //                 newR = r - (randomDegree - (lightness - g) / perDegree) * perDegree;
+        //             } else if (newG < min) {
+        //                 newG = min;
+        //                 newB = b - (randomDegree - (min - g) / perDegree) * perDegree;
+        //             }
+        //         }
+        //     } else if (g === lightness) {
+        //         if (r === min) {
+        //             var newR = r;
+        //             var newG = g;
+        //             var newB = b + randomDegree * perDegree;
+        //             if (newB > lightness) {
+        //                 newB = lightness;
+        //                 newG = g - (randomDegree - (lightness - b) / perDegree) * perDegree;
+        //             } else if (newB < min) {
+        //                 newB = min;
+        //                 newR = r - (randomDegree - (min - b) / perDegree) * perDegree;
+        //             }
+        //         } else {
+        //             var newR = r + randomDegree * perDegree;
+        //             var newG = g;
+        //             var newB = b;
+        //             if (newR > lightness) {
+        //                 newR = lightness;
+        //                 newG = g - (randomDegree - (lightness - r) / perDegree) * perDegree;
+        //             } else if (newR < min) {
+        //                 newR = min;
+        //                 newB = b - (randomDegree - (min - r) / perDegree) * perDegree;
+        //             }
+        //         }
+        //     } else {
+        //         if (r === min) {
+        //             var newR = r;
+        //             var newG = g + randomDegree * perDegree;
+        //             var newB = b;
+        //             if (newG > lightness) {
+        //                 newG = lightness;
+        //                 newB = b - (randomDegree - (lightness - g) / perDegree) * perDegree;
+        //             } else if (newG < min) {
+        //                 newG = min;
+        //                 newR = r - (randomDegree - (min - g) / perDegree) * perDegree;
+        //             }
+        //         } else {
+        //             var newR = r + randomDegree * perDegree;
+        //             var newG = g;
+        //             var newB = b;
+        //             if (newR > lightness) {
+        //                 newR = lightness;
+        //                 newB = b - (randomDegree - (lightness - r) / perDegree) * perDegree;
+        //             } else if (newR < min) {
+        //                 newR = min;
+        //                 newG = g - (randomDegree - (min - r) / perDegree) * perDegree;
+        //             }
+        //         }
+        //     }
+        //     return [newR, newG, newB];
+        // }
+
+        function putSphere(scene) {
+            // build the sphere
+            // for (var i=0; i<50; i++) {
+            var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {}, scene);
+            // randX = 8 + (Math.random(2) - 1);
+            // randY = 3 + (Math.random(2) - 1);
+            // sphere.position = new BABYLON.Vector3(randX, 0, randY);
+            sphere.position = new BABYLON.Vector3(27.375576145979597, 2, -5);
+            // sphere.material = new BABYLON.StandardMaterial("sphere", scene);
+            const sphereMat = new BABYLON.StandardMaterial("myMaterial", scene);
+            sphereMat.diffuseColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+
+            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {
+                mass: 1,
+                friction: 0.0,
+                restitution: 0.3
+            }, scene);
+            // sphere.physicsImpostor.applyImpulse(new BABYLON.Vector3(0, 20, 0), sphere.getAbsolutePosition().add(BABYLON.Vector3.Zero()));
+
+            mirrorRender.push(sphere);
+            // mirrorMesh.material.reflectionTexture.renderList = mirrorRender;
+            // }
+        }
+
+        // 读取小球的数量信息
+        fetch('./count.json')
+            .then(response => response.json())
+            .then(data => {
+                // 这里的 data 就是从 JSON 文件中读取到的数据
+                let spheresNumber = data.number
+                for (let i = 1; i < spheresNumber; i++) {
+                    setTimeout(() => {
+                        putSphere()
+                    }, 1000);
+                }
+            })
+            .catch(error => {
+                console.error('Error reading JSON file:', error);
+            });
+
+        // function setUnderConstruction(scene) {
+        //     var textPositions = [new BABYLON.Vector3(-31.5, -3.5, -44.2), new BABYLON.Vector3(-22, -3.5, -63.2), new BABYLON.Vector3(-49, -3.5, -64), new BABYLON.Vector3(-47.5, -3.5, -67)];
+        //     text = [];
+        //     // 门口提示牌
+        //     /* for (var i = 0; i < textPositions.length; i++) {
+        //         text[i] = new BABYLON.MeshBuilder.CreatePlane("text" + (i + 1).toString(), {
+        //             width: 2,
+        //             height: 1,
+        //         }, scene);
+        //         text[i].position = textPositions[i];
+        //         text[i].visibility = 0.5;
+        //         text[i].material = new BABYLON.StandardMaterial("text" + (i + 1).toString() + "Mat", scene);
+        //         text[i].material.emissiveColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+        //         text[i].material.diffuseTexture = new BABYLON.DynamicTexture("text" + (i + 1).toString() + "DT", { width: 512, height: 256, depth: 1 }, scene);
+        //         text[i].material.diffuseTexture.drawText("Closed", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+        //         text[i].rotation.y = Math.PI;
+        //         text[i].rotation.z = Math.PI;
+        //         text[i].billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
+        //     } */
+        // }
+
+        function unregisterEleAction() {
+            for (var i = 0; i < eleMesh.length; i++) {
+                eleMesh[i].actionManager.unregisterAction(eleAction[i]);
+            }
+        }
+
+        function cancelJoin() {
+            if (isClear) {
+                camera.lockedTarget = null;
+                joinInfo.material.diffuseTexture.drawText("Wanna Join ?", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                joinInfo.actionManager.unregisterAction(throwAction);
+                joinBtn.material.diffuseTexture.drawText("Join", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                joinBtn.actionManager.unregisterAction(clearAction);
+                joinBtn.actionManager.registerAction(joinAction);
+                isClear = false;
+                scene.removeMesh(drawPlane);
+            }
+            registerEleAction();
+            scene.removeMesh(joinInfo);
+            scene.removeMesh(joinBtn);
+            scene.removeMesh(cancelBtn);
+        }
+
+        function drawPlaneInit() {
+            N_LAYERS = 1;
+            WH = 300;
+            WW = 500;
+            pixelGap = 5 / WW;
+            data = new Uint8Array(WW * WH * N_LAYERS * 3).fill(255);
+            texArray = new BABYLON.RawTexture2DArray(
+                data, WH, WW, N_LAYERS,
+                BABYLON.Engine.TEXTUREFORMAT_RGB,
+                scene, false, false,
+                BABYLON.Texture.NEAREST_SAMPLINGMODE,
+            );
+        }
+
+        function drawPlaneReInit() {
+            for (var i = 0; i < data.length; i++) {
+                data[i] = 255;
+            }
+            texArray.update(data);
+        }
+
+        function drawPlaneUpdate() {
+            drawPointsToValues();
+            texArray.update(data);
+        }
+
+        function drawPointsToValues() {
+            var length = Math.sqrt((drawPoints[3] - drawPoints[1]) ** 2 + (drawPoints[2] - drawPoints[0]) ** 2);
+            var numPoints = parseInt(length / pixelGap);
+            var xgapDraw = (drawPoints[2] - drawPoints[0]) / numPoints;
+            var ygapDraw = (drawPoints[3] - drawPoints[1]) / numPoints;
+            if (numPoints === 0) {
+                xgapDraw = 0;
+                ygapDraw = 0;
+            }
+            var xDraw = drawPoints[0];
+            var yDraw = drawPoints[1];
+            for (var i = 0; i < numPoints + 2; i++) {
+                drawOnThePoint(xDraw, yDraw);
+                xDraw += xgapDraw;
+                yDraw += ygapDraw;
+            }
+        }
+
+        function drawOnThePoint(x, y) {
+            var drawIndex = (parseInt((drawPlaneTL[0] - x) / pixelGap)) * WH + parseInt((drawPlaneTL[1] - y) / pixelGap);
+
+            data[3 * drawIndex] = 0;
+            data[3 * drawIndex + 1] = 0;
+            data[3 * drawIndex + 2] = 0;
+        }
+
+        function startDraw() {
+            if (!drawAction) {
+                scene.actionManager = new BABYLON.ActionManager(scene);
+                drawAction = scene.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        BABYLON.ActionManager.OnEveryFrameTrigger,
+                        (e) => {
+                            var pickInfo = scene.pick(scene.pointerX, scene.pointerY, false, false, camera);
+                            drawPoints[2] = pickInfo.pickedPoint.z;
+                            drawPoints[3] = pickInfo.pickedPoint.y;
+                            drawPlaneUpdate();
+                            drawPoints[0] = pickInfo.pickedPoint.z;
+                            drawPoints[1] = pickInfo.pickedPoint.y;
+                        }
+                    )
+                )
+            } else {
+                scene.actionManager.registerAction(drawAction);
+            }
+        }
+
+        function stopDraw() {
+            if (!!drawAction) {
+                scene.actionManager.unregisterAction(drawAction);
+            }
+        }
+
+        function throwDraw() {
+            var k = 0;
+            var kGap = 0.1;
+            var updatePath = function (startPath, endPath, morphK) {
+                for (var i = 0; i < startPath.length; i++) {
+                    startPath[i].x += (endPath[i].x - startPath[i].x) * morphK;
+                    startPath[i].y += (endPath[i].y - startPath[i].y) * morphK;
+                    startPath[i].z += (endPath[i].z - startPath[i].z) * morphK;
+                }
+            };
+            var updatePathNew = function (startPath, endPathNew, morphK) {
+                for (var i = 0; i < startPath.length; i++) {
+                    startPath[i].x += (endPathNew[i].x - startPath[i].x) * (morphK - kGap);
+                    startPath[i].y += (endPathNew[i].y - startPath[i].y) * (morphK - kGap);
+                    startPath[i].z += (endPathNew[i].z - startPath[i].z) * (morphK - kGap);
+                }
+            };
+            var morphAction = scene.registerBeforeRender(function () {
+                if (k < kGap) {
+                    for (var i = 0; i < startPaths.length; i++) {
+                        updatePath(startPaths[i], endPaths[i], k);
+                    }
+                    // ribbon update
+                    drawPlane = BABYLON.Mesh.CreateRibbon(null, startPaths, null, null, null, null, null, null, drawPlane);
+                    // ribbon = BABYLON.MeshBuilder.CreateRibbon("ribbon", {pathArray: startPaths, instance: ribbon, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
+                    k += 0.01;
+                } else if (k < kGap * 2) {
+                    drawPlane = BABYLON.Mesh.CreateRibbon(null, endPaths, null, null, null, null, null, null, drawPlane);
+                    for (var i = 0; i < startPaths.length; i++) {
+                        updatePathNew(endPaths[i], endPathsNew[i], k);
+                    }
+                    // ribbon update
+                    drawPlane = BABYLON.Mesh.CreateRibbon(null, endPaths, null, null, null, null, null, null, drawPlane);
+                    k += 0.01;
+                } else {
+                    // console.log("update");
+                    // ribbon update
+                    drawPlane = BABYLON.Mesh.CreateRibbon(null, endPathsNew, null, null, null, null, null, null, drawPlane);
+                    buildSphere();
+                    // scene.unregisterBeforeRender(this);
+                    // console.log(this);
+                }
+            });
+        }
+
+        function join() {
+            // buildPlane();
+            // buildSphere();
+            if (!drawPlane) {
+                drawPlaneInit();
+                // drawPlane = new BABYLON.MeshBuilder.CreatePlane("drawPlane", {width: 5, height: 3}, scene);
+                // drawPlane.position = new BABYLON.Vector3(15, 0, -8);
+                buildPlane();
+                drawPlaneTL = [0, 1.5];
+                drawPlane.material = new BABYLON.StandardMaterial("drawPlaneMat", scene);
+                drawPlane.material.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+
+                drawPlane.material.diffuseTexture = new BABYLON.DynamicTexture("drawPlaneDT", {
+                    width: 512,
+                    height: 256,
+                    depth: 1
+                }, scene);
+                drawPlane.material.diffuseTexture.drawText("Draw!", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                drawPlane.material.testplugin = new TestMaterialPlugin(drawPlane.material);
+                drawPlane.material.testplugin.texture = texArray;
+                drawPlane.material.testplugin.textureIndex = 0;
+                drawPlane.material.testplugin.isEnabled = true;
+                // drawPlane.rotation.y = Math.PI;
+                // drawPlane.rotation.z = Math.PI;
+
+                drawPlane.actionManager = new BABYLON.ActionManager(scene);
+                // lock
+                camera.lockedTarget = new BABYLON.Vector3(-2, 0, -2.5);
+                drawPlane.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        BABYLON.ActionManager.OnPointerOutTrigger,
+                        (e) => {
+                            stopDraw();
+                        }
+                    )
+                );
+                // draw
+                drawPlane.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        BABYLON.ActionManager.OnPickDownTrigger,
+                        (e) => {
+                            var pickInfo = scene.pick(scene.pointerX, scene.pointerY, false, false, camera);
+                            drawPoints[0] = pickInfo.pickedPoint.z;
+                            drawPoints[1] = pickInfo.pickedPoint.y;
+                            startDraw();
+                        }
+                    )
+                );
+                drawPlane.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        BABYLON.ActionManager.OnPickUpTrigger,
+                        (e) => {
+                            stopDraw();
+                        }
+                    )
+                );
+
+                //change join to clear
+                joinBtn.material.diffuseTexture.drawText("Clear", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                joinBtn.actionManager.unregisterAction(joinAction);
+                clearAction = joinBtn.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        BABYLON.ActionManager.OnPickTrigger,
+                        (e) => {
+                            drawPlaneReInit();
+                        }
+                    )
+                );
+                //change ? to throw
+                joinInfo.material.diffuseTexture.drawText("Throw", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                throwAction = joinInfo.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(
+                        BABYLON.ActionManager.OnPickTrigger,
+                        (e) => {
+                            console.log("Throw!");
+                            throwDraw();
+                        }
+                    )
+                );
+                console.log(joinInfo.actionManager);
+                isClear = true;
+            } else {
+                scene.addMesh(drawPlane);
+                camera.lockedTarget = new BABYLON.Vector3(-2, 0, -2.5);
+                joinInfo.material.diffuseTexture.drawText("Throw", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                joinInfo.actionManager.registerAction(throwAction);
+                joinBtn.material.diffuseTexture.drawText("Clear", 75, 135, "bold 64px monospace", "steelblue", "white", false, true);
+                joinBtn.actionManager.unregisterAction(joinAction);
+                joinBtn.actionManager.registerAction(clearAction);
+                isClear = true;
+            }
+        }
+
+        function morph() {
+            //Morph
+            console.log("Join!");
+            joinMorph2.updateMeshPositions((data) => {
+                var num = data.length / 3;
+                var rc = parseInt(Math.sqrt(num));
+                // var rc = parseInt(num/4);
+                buildPlanePoints(-1, 1, 0, 1, 1, 0, 1, -1, 0, rc, rc);
+                // buildPlanePoints(-1, 1, 0, 1, 1, 0, 1, -1, 0, -1, -1, 0, rc);
+                for (var i = 0; i < data.length; i++) {
+                    data[i] = points[i];
+                }
+            });
+            morphManager = new BABYLON.MorphTargetManager();
+
+            joinMorph.morphTargetManager = morphManager;
+            var target = BABYLON.MorphTarget.FromMesh(joinMorph2, "joinMorph2", 0.25);
+            morphManager.addTarget(target);
+
+            angle = 0;
+            scene.registerBeforeRender(function () {
+                influence = Math.sin(angle) * Math.sin(angle);
+                if (influence < 0.99) {
+                    target.influence = influence;
+                    angle += 0.01;
+                } else {
+                    target.influence = 1;
+                }
+            })
+        }
+
+        function initStartPaths(tl, w, h, startPaths) {
+            var pathGap = 0.1;
+            var subPath = [];
+            for (var i = 0; i <= w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap; j++) {
+                    subPath[j] = new BABYLON.Vector3(tl.x, tl.y - j * pathGap, tl.z - i * pathGap);
+                    // startPaths[i][j] = new BABYLON.Vector3(tl.x-i*pathGap, tl.y-j*pathGap, tl.z);
+                }
+                startPaths[i] = subPath.slice();
+            }
+        }
+
+        function initEndPaths(tl, w, h, endPaths) {
+            var pathGap = 0.1;
+            var subPath = [];
+            var center = new BABYLON.Vector3(tl.x - w / 2, tl.y - h / 2, tl.z - h / 2);
+            var radius = h / 2;
+            var deg1 = 0;
+            var deg2 = 0;
+            var deg1Gap = 2 * Math.PI / (w / pathGap);
+            var deg2Gap = Math.PI / (h / pathGap + 1);
+            for (var i = 0; i <= w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap + 1; j++) {
+                    var wtemp = radius * Math.sin(deg2);
+                    var htemp = radius * Math.cos(deg2);
+                    var x = center.x + wtemp * Math.sin(deg1);
+                    var y = center.y + htemp;
+                    var z = center.z - wtemp * Math.cos(deg1);
+                    subPath[j] = new BABYLON.Vector3(x, y, z);
+                    // startPaths[i][j] = new BABYLON.Vector3(tl.x-i*pathGap, tl.y-j*pathGap, tl.z);
+                    deg2 += deg2Gap;
+                }
+                endPaths[i] = subPath.slice();
+                deg2 = 0;
+                deg1 += deg1Gap;
+            }
+        }
+
+        function initEndPaths2(tl, w, h, endPaths) {
+            var pathGap = 0.1;
+            var pageGap = 0.01;
+            var subPath = [];
+            for (var i = 0; i <= w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap; j++) {
+                    if (j < h / pathGap / 2) {
+                        subPath[j] = new BABYLON.Vector3(tl.x, tl.y - j * pathGap, tl.z - i * pathGap);
+                    } else {
+                        subPath[j] = new BABYLON.Vector3(tl.x, tl.y - (h / pathGap - j) * pathGap, tl.z - pageGap - i * pathGap);
+                    }
+                    // startPaths[i][j] = new BABYLON.Vector3(tl.x-i*pathGap, tl.y-j*pathGap, tl.z);
+                }
+                endPaths[i] = subPath.slice();
+            }
+        }
+
+        function initEndPaths3(tl, w, h, endPathsNew) {
+            var pathGap = 0.1;
+            var pageGap = 0.01;
+            var subPath = [];
+            for (var i = 0; i <= w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap; j++) {
+                    if (i < w / pathGap / 2) {
+                        if (j < h / pathGap / 2) {
+                            subPath[j] = new BABYLON.Vector3(tl.x, tl.y - j * pathGap, tl.z - i * pathGap);
+                        } else {
+                            subPath[j] = new BABYLON.Vector3(tl.x - pathGap, tl.y - (h / pathGap - j) * pathGap, tl.z - i * pageGap);
+                        }
+                    } else {
+                        if (j < h / pathGap / 2) {
+                            subPath[j] = new BABYLON.Vector3(tl.x - 2 * pathGap, tl.y - j * pathGap, tl.z - (w / pathGap - i) * pathGap);
+                        } else {
+                            subPath[j] = new BABYLON.Vector3(tl.x - 3 * pathGap, tl.y - (h / pathGap - j) * pathGap, tl.z - (w / pathGap - i) * pathGap);
+                        }
+                    }
+                    // startPaths[i][j] = new BABYLON.Vector3(tl.x-i*pathGap, tl.y-j*pathGap, tl.z);
+                }
+                endPathsNew[i] = subPath.slice();
+            }
+        }
+
+        function buildPlane() {
+            startPaths = [];
+            initStartPaths(new BABYLON.Vector3(-2, 1.5, 0), 5, 3, startPaths);
+            endPaths = [];
+            // initEndPaths(new BABYLON.Vector3(17.5, 1.5, -8), 5, 3, endPaths);
+            initEndPaths2(new BABYLON.Vector3(-2, 1.5, 0), 5, 3, endPaths);
+            initEndPaths3(new BABYLON.Vector3(-2, 1.5, 0), 5, 3, endPathsNew);
+            sideO = BABYLON.Mesh.DOUBLESIDE;
+            drawPlane = BABYLON.Mesh.CreateRibbon("ribbon", startPaths, false, false, 0, scene, true, sideO);
+            // var ribbon = BABYLON.Mesh.CreateRibbon("ribbon",{pathArray: startPaths, updatable: true, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
+            drawPlane.material = new BABYLON.StandardMaterial("ribbonMat", scene);
+            // var k = 0;
+            // var updatePath = function(startPath, endPath, morphK) {
+            //     for (var i = 0; i < startPath.length; i++) {
+            //         startPath[i].x += (endPath[i].x - startPath[i].x)*morphK;
+            //         startPath[i].y += (endPath[i].y - startPath[i].y)*morphK;
+            //         startPath[i].z += (endPath[i].z - startPath[i].z)*morphK;
+            //     }
+            // };
+            // var morphAction = scene.registerBeforeRender(function(){
+            //     if (k<0.2) {
+            //         // console.log("update");
+            //         // update pathArray
+            //         for(var i = 0; i < startPaths.length; i++) {
+            //             updatePath(startPaths[i], endPaths[i], k);
+            //         }
+            //         // ribbon update
+            //         drawPlane = BABYLON.Mesh.CreateRibbon(null, startPaths, null, null, null, null, null, null, drawPlane);
+            //         // ribbon = BABYLON.MeshBuilder.CreateRibbon("ribbon", {pathArray: startPaths, instance: ribbon, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
+            //         // console.log(startPaths);
+            //         k += 0.001;
+            //     } else {
+            //         // console.log("update");
+            //         for(var i = 0; i < startPaths.length; i++) {
+            //             updatePath(startPaths[i], endPaths[i], 1);
+            //         }
+            //         // ribbon update
+            //         drawPlane = BABYLON.Mesh.CreateRibbon(null, startPaths, null, null, null, null, null, null, drawPlane);
+            //         // scene.unregisterBeforeRender(this);
+            //         // console.log(this);
+            //     }
+            // });
+        }
+
+        function initHalfSpherePaths1(tl, w, h) {
+            var thickness = 0.2;
+            var pathGap = 0.1;
+            var subPath = [];
+            var center = new BABYLON.Vector3(tl.x, tl.y - h / 4, tl.z - w / 4);
+            var radius = Math.sqrt(Math.pow(w / 4, 2) + Math.pow(h / 4, 2));
+            var deg1 = 0;
+            var deg2 = 0;
+            var deg1Gap = -Math.PI / (w / pathGap);
+            var deg2Gap = Math.PI / (h / pathGap + 1);
+            for (var i = 0; i <= w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap + 1; j++) {
+                    var wtemp = radius * Math.sin(deg2);
+                    var htemp = radius * Math.cos(deg2);
+                    var x = center.x + htemp;
+                    var y = center.y + wtemp * Math.sin(deg1);
+                    var z = center.z - wtemp * Math.cos(deg1);
+                    subPath[j] = new BABYLON.Vector3(x, y, z);
+                    deg2 += deg2Gap;
+                }
+                startPaths[i] = subPath.slice();
+                deg2 = 0;
+                for (var j = 0; j <= h / pathGap + 1; j++) {
+                    var wtemp = (radius - thickness) * Math.sin(deg2);
+                    var htemp = (radius - thickness) * Math.cos(deg2);
+                    var x = center.x + htemp;
+                    var y = center.y + wtemp * Math.sin(deg1);
+                    var z = center.z - wtemp * Math.cos(deg1);
+                    subPath[j] = new BABYLON.Vector3(x, y, z);
+                    deg2 += deg2Gap;
+                }
+                startPaths[2 * w / pathGap + 1 - i] = subPath.slice();
+                deg2 = 0;
+                deg1 += deg1Gap;
+                // if (i===w/pathGap-1) {
+                //     deg1 = -Math.PI;
+                // }
+            }
+            startPaths[2 * w / pathGap + 2] = startPaths[0].slice();
+        }
+
+        // function initHalfSpherePaths2(tl, w, h, endPaths) {
+        //     var pathGap = 0.1;
+        //     var subPath = [];
+        //     var center = new BABYLON.Vector3(tl.x-w/2, tl.y-h/2+w/2, tl.z+w/2);
+        //     var radius = w/2;
+        //     var deg1 = 0;
+        //     var deg2 = 0;
+        //     var deg1Gap = Math.PI/(w/pathGap);
+        //     var deg2Gap = Math.PI/(h/pathGap+1);
+        //     for (var i=0; i<=w/pathGap; i++) {
+        //         for (var j=0; j<=h/pathGap+1; j++) {
+        //             var wtemp = radius * Math.sin(deg2);
+        //             var htemp = radius * Math.cos(deg2);
+        //             var x = center.x + htemp;
+        //             var y = center.y + wtemp * Math.sin(deg1);
+        //             var z = center.z - wtemp * Math.cos(deg1);
+        //             subPath[j] = new BABYLON.Vector3(x, y, z);
+        //             deg2 += deg2Gap;
+        //         }
+        //         endPaths[i] = subPath.slice();
+        //         deg2 = 0;
+        //         deg1 += deg1Gap;
+        //     }
+        // }
+
+        function changeHalfSpherePaths2(tl, w, h, degree) {
+            var thickness = 0.1;
+            var pathGap = 0.1;
+            var subPath = [];
+            var radius = Math.sqrt(Math.pow(w / 4, 2) + Math.pow(h / 4, 2));
+            var center = new BABYLON.Vector3(tl.x + radius - radius * Math.sin(degree), tl.y - h / 4 + radius * Math.cos(degree), tl.z - w / 4);
+            // console.log(center);
+            var deg1 = Math.PI / 2 - degree;
+            var deg2 = 0;
+            var deg1Gap = Math.PI / (w / pathGap);
+            var deg2Gap = Math.PI / (h / pathGap + 1);
+            for (var i = 0; i <= w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap + 1; j++) {
+                    var wtemp = radius * Math.sin(deg2);
+                    var htemp = radius * Math.cos(deg2);
+                    var x = center.x - wtemp * Math.cos(deg1);
+                    var y = center.y + wtemp * Math.sin(deg1);
+                    var z = center.z + htemp;
+                    subPath[j] = new BABYLON.Vector3(x, y, z);
+                    deg2 += deg2Gap;
+                }
+                endPaths[i] = subPath.slice();
+                deg2 = 0;
+                for (var j = 0; j <= h / pathGap + 1; j++) {
+                    var wtemp = (radius - thickness) * Math.sin(deg2);
+                    var htemp = (radius - thickness) * Math.cos(deg2);
+                    var x = center.x - wtemp * Math.cos(deg1);
+                    var y = center.y + wtemp * Math.sin(deg1);
+                    var z = center.z + htemp;
+                    subPath[j] = new BABYLON.Vector3(x, y, z);
+                    deg2 += deg2Gap;
+                }
+                endPaths[2 * w / pathGap + 1 - i] = subPath.slice();
+                deg2 = 0;
+                deg1 += deg1Gap;
+                // if (i===w/pathGap-1) {
+                //     deg1 = Math.PI;
+                // }
+            }
+            endPaths[2 * w / pathGap + 2] = endPaths[0].slice();
+        }
+
+        function buildSphere() {
+            if (!ribbon) {
+                initHalfSpherePaths1(new BABYLON.Vector3(-2, 1.5, 0), 5, 3);
+                changeHalfSpherePaths2(new BABYLON.Vector3(-2, 1.5, 0), 5, 3, 0);
+                initWholeSpherePaths1(new BABYLON.Vector3(-2, 1.5, 0), 5, 3);
+                sideO = BABYLON.Mesh.DOUBLESIDE;
+                ribbon = BABYLON.Mesh.CreateRibbon("ribbon", startPaths, false, false, 0, scene, true, sideO);
+                ribbon.material = new BABYLON.StandardMaterial("ribbonMat", scene);
+                // ribbon.material.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+                ribbon2 = BABYLON.Mesh.CreateRibbon("ribbon", endPaths, false, false, 0, scene, true, sideO);
+                ribbon2.material = new BABYLON.StandardMaterial("ribbonMat", scene);
+                // ribbon2.material.emissiveColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+                var degree = 0;
+                isBall = false;
+                var morphAction = scene.registerBeforeRender(function () {
+                    if (degree < Math.PI / 2) {
+                        changeHalfSpherePaths2(new BABYLON.Vector3(-2, 1.5, 0), 5, 3, degree);
+                        ribbon2 = BABYLON.Mesh.CreateRibbon(null, endPaths, null, null, null, null, null, null, ribbon2);
+                        degree += Math.PI / 200;
+                    } else if (degree > Math.PI / 20 * 11) {
+                        // changeHalfSpherePaths2(new BABYLON.Vector3(17.5, -2, -12), 5, 3, Math.PI/2);
+                        // ribbon2 = BABYLON.Mesh.CreateRibbon(null, endPaths, null, null, null, null, null, null, ribbon2);
+                        endAnimation();
+                        // getTheBall();
+                        degree += Math.PI / 200;
+                    } else {
+                        degree += Math.PI / 200;
+                    }
+                });
+                console.log('end')
+            }
+        }
+
+        function endAnimation() {
+            if (!isBall) {
+                /* scene.removeMesh(drawPlane);
+                scene.removeMesh(ribbon);
+                scene.removeMesh(ribbon2); */
+                /* scene.removeMesh(joinInfo);
+                scene.removeMesh(joinBtn);
+                scene.removeMesh(cancelBtn); */
+                putSphere(scene);
+                unregisterEleAction();
+                isBall = true;
+            }
+        }
+
+        function getTheBall() {
+            if (!isBall) {
+                scene.removeMesh(ribbon2);
+                ribbon = BABYLON.Mesh.CreateRibbon(null, spherePaths, false, false, 0, scene, true, sideO);
+                isBall = true;
+            }
+        }
+
+        function initWholeSpherePaths1(tl, w, h) {
+            var thickness = 0.2;
+            var pathGap = 0.1;
+            var subPath = [];
+            var center = new BABYLON.Vector3(tl.x - w / 4, tl.y - h / 4, tl.z);
+            var radius = Math.sqrt(Math.pow(w / 4, 2) + Math.pow(h / 4, 2));
+            var deg1 = 0;
+            var deg2 = 0;
+            var deg1Gap = -Math.PI / (w / pathGap);
+            var deg2Gap = Math.PI / (h / pathGap + 1);
+            for (var i = 0; i <= 2 * w / pathGap; i++) {
+                for (var j = 0; j <= h / pathGap + 1; j++) {
+                    var wtemp = radius * Math.sin(deg2);
+                    var htemp = radius * Math.cos(deg2);
+                    var x = center.x + htemp;
+                    var y = center.y + wtemp * Math.sin(deg1);
+                    var z = center.z - wtemp * Math.cos(deg1);
+                    subPath[j] = new BABYLON.Vector3(x, y, z);
+                    deg2 += deg2Gap;
+                }
+                spherePaths[i] = subPath.slice();
+                // deg2 = 0;
+                // for (var j=0; j<=h/pathGap+1; j++) {
+                //     var wtemp = (radius-thickness) * Math.sin(deg2);
+                //     var htemp = (radius-thickness) * Math.cos(deg2);
+                //     var x = center.x + htemp;
+                //     var y = center.y + wtemp * Math.sin(deg1);
+                //     var z = center.z - wtemp * Math.cos(deg1);
+                //     subPath[j] = new BABYLON.Vector3(x, y, z);
+                //     deg2 += deg2Gap;
+                // }
+                // spherePaths[4*w/pathGap+1-i] = subPath.slice();
+                deg2 = 0;
+                deg1 += deg1Gap;
+                // if (i===w/pathGap-1) {
+                //     deg1 = -Math.PI;
+                // }
+            }
+            // spherePaths[4*w/pathGap+2] = spherePaths[0].slice();
+        }
+
+        function buildPlanePoints(x1, y1, z1, x2, y2, z2, x3, y3, z3, r, c) {
+            var x = x1;
+            var y = y1;
+            var z = z1;
+            var index = 0;
+            var xgapc = (x2 - x1) / (c - 2);
+            var ygapc = (y2 - y1) / (c - 2);
+            var zgapc = (z2 - z1) / (c - 2);
+            var xgapr = (x3 - x2) / (r - 2);
+            var ygapr = (y3 - y2) / (r - 2);
+            var zgapr = (z3 - z2) / (r - 2);
+
+            for (var i = 0; i < r; i++) {
+                points[index] = x;
+                index++;
+                points[index] = y;
+                index++;
+                points[index] = z;
+                index++;
+                x = x + xgapr;
+                y = y + ygapr;
+                z = z + zgapr;
+                for (var j = 0; j < c; j++) {
+                    points[index] = points[index - 3] + xgapc;
+                    index++;
+                    points[index] = points[index - 3] + ygapc;
+                    index++;
+                    points[index] = points[index - 3] + zgapc;
+                    index++;
+                }
+            }
+        }
+
+        // async function initForces() {
+        // scene.enablePhysics(null, new BABYLON.CannonJSPlugin());
+        // scene.enablePhysics(null, new BABYLON.OimoJSPlugin());
+        // await Ammo();
+        // scene.enablePhysics(null, new BABYLON.AmmoJSPlugin());
+        // }
+
+        class TestMaterialPlugin extends BABYLON.MaterialPluginBase {
+            textureIndex = 0;
+            texture = null;
+
+            get isEnabled() {
+                return this._isEnabled;
+            }
+
+            set isEnabled(enabled) {
+                if (this._isEnabled === enabled) {
+                    return;
+                }
+                this._isEnabled = enabled;
+                this.markAllDefinesAsDirty();
+                this._enable(this._isEnabled);
+            }
+
+            _isEnabled = false;
+
+            constructor(material, texArray) {
+                super(material, "TestPlugin", 200, { "TWOD_ARRAY_TEXTURE": false });
+            }
+
+            prepareDefines(defines, scene, mesh) {
+                defines["TWOD_ARRAY_TEXTURE"] = this._isEnabled;
+            }
+
+            getClassName() {
+                return "TestMaterialPluginName"
+            }
+
+            getSamplers(samplers) {
+                samplers.push("arrayTex");
+            }
+
+            getUniforms() {
+                return {
+                    "ubo": [
+                        { name: "texIndex", size: 1, type: "float" },
+                    ],
+                    "fragment":
+                        `#ifdef TWOD_ARRAY_TEXTURE
+                                uniform float texIndex;
+                            #endif
+                            `,
+                }
+            }
+
+            bindForSubMesh(uniformBuffer, scene, engine, subMesh) {
+                if (this._isEnabled) {
+                    uniformBuffer.updateFloat('texIndex', this.textureIndex);
+                    uniformBuffer.setTexture('arrayTex', this.texture);
+                }
+            }
+
+            getCustomCode(shaderType) {
+                if (shaderType === "fragment") return {
+                    // convert: baseColor = texture2D(diffuseSampler, vDiffuseUV + uvOffset);
+                    // to:      baseColor = texture(arrayTex, vec3(vDiffuseUV, float(texIndex)));
+                    "!baseColor\\=texture2D\\(diffuseSampler,vDiffuseUV\\+uvOffset\\);":
+                        `baseColor = texture(arrayTex, vec3(vDiffuseUV, texIndex));`,
+                    "CUSTOM_FRAGMENT_DEFINITIONS": `
+                            uniform highp sampler2DArray arrayTex;
+                        `
+                }
+                return null
+            }
+        }
+    </script>
+
+    <div id="messageBox" style="display: none;">
+        <div class="close" onclick="closeMessage()">close x</div>
+
+        <div id="about-room" style="display: none;">
+            <br>
+            <p>You are now in the Elephant Room, part I of the exhibition, where you can find works from 2 artists.<br>
+                <br>
+                <span class="hint"><em>Click on the work titles to navigate to the work in the room.</em></span><br>
+            <ul>
+                <li>
+                    <a class="find-work" onclick="findWork(-29.21, 1.5, -26.53, -10, 0.49, -17.36)"><span
+                            class="workTitle">Elephant in the Room</span></a><br>
+                    2023<br>
+                    by SXSY Collective (b. 2019)<br>
+                    3D model & animation, software programming<br>
+                    dimension varies
+                </li>
+                <li>
+                    <a class="find-work" onclick="findWork(14.04, 1.5, 14.09, -7.26, 1.06, 14.53)"><span
+                            class="workTitle">Mizaru</span></a><br>
+                    originally in 2019<br>
+                    by Antone Konst (b. 1987)<br>
+                    oil on canvas<br>
+                    dimension varies
+                </li>
+            </ul>
+            </p>
+        </div>
+
+        <div id="about-exhibition" style="display: none;">
+            <h1>Man-Made Animals:<br>Self in the Other</h1>
+            <p>an online Pavilion of <a href="https://thewrong.org/" target="_blank">the 6th Wrong Biennale</a></p>
+            <p>Since cave paintings, the earliest documentations of art by humans, animals have never left human's
+                artworks. Whether they are depicted in pigments from mineral stones or binary data, the renderings of
+                the animals are shaped by the latest technologies by humans and the environments we are in. In a
+                phenomenological sense, animals for humans are never animals per se; they are partially man-made, as an
+                externalized version of psychological and philosophical “self”, or as “the other,” something alien and
+                unfathomable, or, most likely, both.</p>
+            <p>With these thoughts in mind, SXSY Collective presents a series of artworks featuring animal-related works
+                of various media – from painting to sculpture to video to participatory and interactive work by a group
+                of local and international artists – all inside a 3D video game directly accessible in a browser. The
+                virtual gallery space for the exhibition is a replica of the SXSY Office on the 46th floor of a
+                skyscraper in downtown Chengdu, a metropolitan in Southwest China with a population of 20 million
+                people. Confined in an awkwardly urban and limited space in a supposedly infinite virtual space, the
+                viewers are confronted with animal works that press them to think about the relationships between the
+                viewers, the artists, the animals, and the space, discovering "self" in various types of "other."</p>
+            <br>
+            <h1>Artists</h1>
+            <p>The following artists are exhibiting their work in this exhibition:</p>
+            <ul>
+                <li><a href="https://antonekonst.com/" target="_blank">Antone Konst</a> (b. 1987, New Haven, USA)</li>
+                <li><a href="https://www.elpihv.co.uk/" target="_blank">Elpida Hadezi-Vasileva</a> (b. 1971, Kavadarci,
+                    Macedonia)
+                </li>
+                <li>Joe Pearson (b. 1990, London, UK)</li>
+                <li>RESET (b. 1996, Zhengzhou, China)</li>
+                <li>Sheng Zhang (b. 1980, Kaifeng, China)</li>
+                <li>SXSY Collective (b. 2019, Chengdu, China)</li>
+                <li>Weikang Gong (b. 1992, Mianyang, China)</li>
+                <li><a href="https://www.elpihv.co.uk/" target="_blank">Wenyun Xiong</a> (b. 1955, Chongqing, China)
+                </li>
+                <li>Yalin Zhao (Chengdu, China)</li>
+                <li>Yinan Song (b. 1991, Xinxiang, China)</li>
+            </ul>
+            <br>
+            <h1>Creators</h1>
+            <p>See the full list of creator for this project by clickong on the "Creators" button in the bottom left
+                menu.</p>
+            <br>
+            <h1>Technologies</h1>
+            <p>This project is built with Babylon.js for programming and Blender for 3D modeling & animation.</p>
+            <br>
+            <h1>Special Thanks</h1>
+            <p>We receive advice and help from the following organizations & individuals:</p>
+            <ul>
+                <li><a href="https://thewrong.org/" target="_blank">The 6th Wrong Biennale</a></li>
+                <li>Meng Tian, Unique Art Museum, Chengdu, China</li>
+                <li>Kate Gu, M+ Art Museum, Hong Kong, China</li>
+                <li>Jody Huang, Almost Four Artspace, Chengdu, China</li>
+            </ul>
+        </div>
+        <div id="about-us" style="display: none;">
+            <h1>SXSY Collective</h1>
+            <p>The Man-Made Animals: Self in the Other exhibition is curated and produced by SXSY Collective as an
+                online pavilion for the 6th Wrong Biennale.</p>
+            <p>SXSY Collective is an art collective under <a class="sxsyworks" href="http://sxsy.works"
+                    target="_blank">SXSY Works</a>, an art, design & technology
+                studio, based in Chengdu, China.</p>
+            <br>
+            <h1>Credits</h1>
+            <p>SXSY Collective curates and produces this exhibition.</p>
+            <ul>
+                <li>Project Lead: Yinan Song</li>
+                <li>Curation: Yinan Song</li>
+                <li>Visual Design: Yinan Song, Shaohua Gong</li>
+                <li>3D Modeling: Mengxin Huang, Yinan Song, Baochang Lu, Tingyun Yin, Zhihan Zhang, Heng Wu</li>
+                <li>Programming: Siyuan Peng, Yinan Song, Yujia Liu, Xiulin Wang, Shixu Liu</li>
+                <li>Music: Dmitrii Kolesnikov
+                <li>Text: Yinan Song</li>
+                <li>Translation: Shaohua Gong</li>
+            </ul>
+            <br>
+            <h1>Artists</h1>
+            <p>The following artists are exhibiting their work in this exhibition:</p>
+            <ul>
+                <li><a href="https://antonekonst.com/" target="_blank">Antone Konst</a> (b. 1987, New Haven, USA)</li>
+                <li><a href="https://www.elpihv.co.uk/" target="_blank">Elpida Hadezi-Vasileva</a> (b. 1971, Kavadarci,
+                    Macedonia)
+                </li>
+                <li>Joe Pearson (b. 1990, London, UK)</li>
+                <li>RESET (b. 1996, Zhengzhou, China)</li>
+                <li>Sheng Zhang (b. 1980, Kaifeng, China)</li>
+                <li>SXSY Collective (b. 2019, Chengdu, China)</li>
+                <li>Weikang Gong (b. 1992, Mianyang, China)</li>
+                <li><a href="https://www.elpihv.co.uk/" target="_blank">Wenyun Xiong</a> (b. 1955, Chongqing, China)
+                </li>
+                <li>Yalin Zhao (Chengdu, China)</li>
+                <li>Yinan Song (b. 1991, Xinxiang, China)</li>
+            </ul>
+            <br>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('backToOriginalPosition').addEventListener('click', () => {
+            camera.position = new BABYLON.Vector3(-27, -1.85, -20.119);
+            camera.setTarget(new BABYLON.Vector3(-6, -1.715, -16.5));
+        })
+
+        // 静音按钮
+        const mute = document.querySelector('#mute')
+        const mainAudio = document.querySelector('#mainAudio')
+        let control = 0
+        mute.addEventListener('click', () => {
+            if (mainAudio.paused) {
+                mainAudio.play()
+            } else {
+                mainAudio.pause()
+            }
+        })
+    </script>
+
+    <script>
+        // 菜单哔哔的声音
+        $(".leftBottomSection button").mouseenter(function () {
+            beep.pause();
+            beep.play();
+        });
+
+        $(".rightBottomButton button").mouseenter(function () {
+            beep.pause();
+            beep.play();
+        });
+
+        $(".handy-menu button").mouseenter(function () {
+            beep.pause();
+            beep.play();
+        });
+
+        $("#words").mouseenter(function () {
+            dong.pause();
+            ding.play();
+        });
+
+        $("#tips-ok").mouseenter(function () {
+            beep.play();
+        });
+
+        $("a").mouseenter(function () {
+            dong.pause();
+            ding.play();
+        });
+
+        $("a").mouseleave(function () {
+            ding.pause();
+            dong.play();
+        });
+
+        $("#capture").mousedown(function () {
+            shutter.play();
+        });
+
+        $("#backToOriginalPosition").mousedown(function () {
+            whoosh.play();
+        });
+
+        $("#mute").mousedown(function () {
+            beep.play();
+        });
+
+        // 窗口大小改变之后重新读取
+        var resizeTimeout;
+        window.addEventListener('resize', function (event) {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function () {
+                window.location.reload();
+            }, 1500);
+            beep.play();
+            $("#noti").css("display", "block");
+        });
+    </script>
+    <!-- babylon camera filter -->
+    <!-- <script type="text/javascript" src="./lib/postprocessing.js"></script> -->
+</body>
+
+</html>
+
+<!--这两个是给dom元素添加监听事件的 最后引入-->
+<script src="./lib/entrytipShowWhoosh.js"></script>
+<script src="./lib/entrytipButtonAudio.js"></script>

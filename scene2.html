@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domesticated Animal Room</title>
+
+    <!-- Google Analytics tag (gtag.js) -->
+    <!--    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MWCCTMRED3"></script>-->
+    <script async src="./lib/gtag.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-MWCCTMRED3');
+    </script>
+
+    <!-- favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./images/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="./images/favicons/site.webmanifest">
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <!--    <script src="https://code.jquery.com/jquery-3.7.1.js"-->
+    <!--        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>-->
+    <script type="text/javascript" src="./lib/jquery-3.7.1.min.js"></script>
+
+    <!--stylesheet-->
+    <link rel="stylesheet" href="main.css">
+
+    <!--my own functions -->
+    <script type="text/javascript" src="./lib/myfunctions.js"></script>
+
+    <!--babylon links -->
+    <script src="./lib/dat.gui.min.js"></script>
+    <script src="./lib/Assets.js"></script>
+    <script src="./lib/ammo.js"></script>
+    <script src="./lib/cannon.js"></script>
+    <script src="./lib/Oimo.js"></script>
+    <script src="./lib/earcut.min.js"></script>
+    <script src="./lib/babylon.js"></script>
+    <script src="./lib/babylonjs.materials.min.js"></script>
+    <script src="./lib/babylonjs.proceduralTextures.min.js"></script>
+    <script src="./lib/babylonjs.postProcess.min.js"></script>
+    <script src="./lib/babylonjs.loaders.js"></script>
+    <script src="./lib/babylonjs.serializers.min.js"></script>
+    <script src="./lib/babylon.gui.min.js"></script>
+    <script src="./lib/babylon.inspector.bundle.js"></script>
+    <script src="https://cdn.babylonjs.com/babylon.glTF2FileLoader.js"></script>
+    <!--    <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>-->
+    <!--    <script src="./lib/babylon.gui.min.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>-->
+    <script src="./lib/HavokPhysics_umd.js"></script>
+    <script src="./lib/meshwriter.min.js"></script>
+    <!--    <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>-->
+    <!--    <script src="./lib/babylon.inspector.bundle.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/babylon.js"></script>-->
+    <!--    <script src="./lib/babylon.js"></script>-->
+    <!--    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>-->
+    <script src="./lib/babylonjs.loaders.min.js"></script>
+    <!--    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>-->
+    <script src="./lib/html2canvas.min.js"></script>
+</head>
+
+<body>
+<!--最新读取屏幕覆盖读取部分 -->
+<div id="loading-scene">
+    <div id="loading-image" style='background-image: url("./images/loading_2.png");'></div>
+    <div id="loading-text">
+        <p>Welcome to</p>
+        <h1 id="ex-title">Man-Made Animals:<br>Self in the Other</h1>
+        <p>a Pavilion for the 6th Wrong Biennale</p>
+        <br>
+        <p style="font-size: 0.8em;"><em>Please make sure the sound is on and the pop-up is allowed,</em></p>
+        <p style="font-size: 0.8em;"><em id="loading-text-progress"></em></p>
+        <br>
+    </div>
+</div>
+
+ <!-- resize重新读取提醒 -->
+<div id="noti">
+    <span>Detected window resize. Reloading for you...</span>
+</div>
+
+<!-- 音效 -->
+<audio id="beep" src="./audio/beep.mp3" style="display: none;"></audio>
+<audio id="whoosh" src="./audio/whoosh.mp3" style="display: none;"></audio>
+<audio id="ding" src="./audio/ding.mp3" style="display: none;"></audio>
+<audio id="dong" src="./audio/dong.mp3" style="display: none;"></audio>
+<audio id="shutter" src="./audio/shutter.mp3" style="display: none;"></audio>
+<audio src="./audio/atmosphere-piano-158054.mp3" loop autoplay style="display: none;" id="mainAudio"></audio>
+<script>
+    let whoosh = document.querySelector("#whoosh");
+    let beep = document.querySelector("#beep");
+    let ding = document.querySelector("#ding");
+    let dong = document.querySelector("#dong");
+    let shutter = document.querySelector("#shutter");
+</script>
+
+<!-- 触碰门的弹窗 -->
+<div id="entrytip">
+    Wanna leave?
+    <div class="button-set">
+        <button id="leftbutton">Yes</button>
+        <button id="rightbutton">No</button>
+    </div>
+</div>
+
+<div class="leftTopSection">
+    <span id="you-are" style="font-size: 1em;"></span><br>
+    <span id="room-line-1" style="font-size: 5em; line-height: 100%; text-transform: uppercase;"></span><br>
+    <span id="room-line-2" style="font-size: 5em; line-height: 100%; text-transform: uppercase;"></span><br>
+    <span id="biennale">Part of the <a onclick="showEx()">Man-Made Animals: Self in the Other</a><br>a Pavilion for
+            the 6th Wrong Biennale</span><br>
+    <span id="msg"></span>
+    <script type="text/javascript">
+        let time = setInterval(() => {
+            if (document.querySelector('#loading-scene').style.display == 'none') {
+                var showText = function (target, message, index, interval) {
+                    if (index < message.length) {
+                        $(target).append(message[index++]);
+                        setTimeout(function () {
+                            showText(target, message, index, interval);
+                        }, interval);
+                    }
+                }
+
+                $(function () {
+                    showText("#you-are", "You are now in the", 0, 100);
+                });
+
+                $(function () {
+                    showText("#room-line-1", "Domesticated", 0, 200);
+                });
+
+                $(function () {
+                    showText("#room-line-2", "Animal Room", 0, 300);
+                });
+
+                setTimeout($("#biennale").fadeIn(5000), 5000);
+
+                clearInterval(time)
+            }
+        }, 200)
+    </script>
+</div>
+<div class="leftBottomSection" data-html2canvas-ignore="true">
+    <span style="color: white; letter-spacing: 0.1em">About</span>
+    <button id="thisRoom" onclick="showInfo('room');">This Room</button>
+    <button id="thisProject" onclick="showInfo('project')">This Project</button>
+    <button id="thisUs" onclick="showInfo('us')">Creators</button>
+</div>
+<div class="rightTopButton" data-html2canvas-ignore="true">
+    <div class="handy-menu">
+        <button id="mute" onclick="toggle(this);">
+            <img src="./images/icons/sound1.png" onMouseOver="this.src='./images/icons/sound7.png'"
+                 onMouseOut="this.src='./images/icons/sound1.png'"/>
+        </button>
+        <!-- <button id="capture" onclick="capture()">
+            <img src="./images/icons/photo1.png" onMouseOver="this.src='./images/icons/photo3.png'" onMouseOut="this.src='./images/icons/photo1.png'"/>
+        </button> -->
+        <button id="backToOriginalPosition">
+            <img src="./images/icons/return1.png" onMouseOver="this.src='./images/icons/return3.png'"
+                 onMouseOut="this.src='./images/icons/return1.png'"/>
+        </button>
+        <button id="backToMainRoom">
+            <img src="./images/icons/exit1.png" onMouseOver="this.src='./images/icons/exit3.png'"
+                 onMouseOut="this.src='./images/icons/exit1.png'"/>
+        </button>
+    </div>
+    <div id="words-div"><a id="show-tips" onclick="showTips()">
+        <div id="words"></div>
+    </a></div>
+    <div id="all-tips">
+        <ul>
+            <li>Use your mouse to click & drag to turn the viewport</li>
+            <li>Use the up/down/left/right keys on your keyboard to move around</li>
+            <li>Use the bottom menus to check different parts of the exhibition</li>
+            <li>Hit the doors to check if you can enter</li>
+            <li>Click on 'About This Room' to see a list of all the works in this room</li>
+            <li>Turn the sound on for your browser for the full experience</li>
+        </ul>
+        <span id="tips-ok" onclick="closeTips()">okay</span>
+    </div>
+    <script type="text/javascript">
+        (function () {
+            var moretips = "<span style='text-decoration: underscore'><br><em>click for more tips</em></span>";
+            var words = [
+                    "TIPS: Turn the sound on for your browser for the full experience" + moretips,
+                    "TIPS: Use your mouse to click & drag to turn the viewport" + moretips,
+                    "TIPS: Use the up/down/left/right keys on your keyboard to move around" + moretips,
+                    "TIPS: Use the bottom menus to check different parts of the exhibition" + moretips,
+                    "TIPS: Click on 'About This Room' to see works in this room" + moretips,
+                    "TIPS: Hit on the doors the doors to see if you can enter" + moretips,
+                ],
+                i = 0;
+
+            setInterval(function () {
+                $('#words').fadeOut(function () {
+                    $(this).html(words[(i = (i + 1) % words.length)]).fadeIn();
+                });
+            }, 7000)
+        })();
+    </script>
+</div>
+
+<div id="messageBox" style="display: none;">
+    <div class="close" onclick="closeMessage()">close x</div>
+
+    <div id="about-room" style="display: none;">
+        <p>
+            <br>
+            You are now in the Domesticated Animal Room, part III of the exhibition, where you can find works from 4
+            artists.<br>
+            <br>
+            <span class="hint"><em>Click on the work titles to navigate to the work in the room.</em></span><br>
+        <ul>
+            <li>
+                <a class="find-work" onclick="findWork(37.48, 1, -86.6, 248.16, -11.25, -99.32)"><span
+                        class="workTitle">Chickens & Rabits in the Same Cage</span></a><br>
+                originally in 2023<br>
+                by RESET (b. 1996)<br>
+                spray paint, wall surface
+            </li>
+            <li>
+                <a class="find-work" ” onclick="findWork(52.14, 1, -96.97, 56.65, -86.72, -289.2)"><span
+                        class="workTitle">Little Travel</span></a><br>
+                originally in 2023<br>
+                by Yanlin Zhao<br>
+                3D model & animation<br>
+                dimension varies
+            </li>
+            <li>
+                <a class="find-work" onclick="findWork(68.4, 1, -97.97, -152.72, 0.44, -100)"><span
+                        class="workTitle">Untitled</span></a><br>
+                originally in 2019<br>
+                by Weikang Gong (b. 1992)<br>
+                disinfectant, textile
+            </li>
+            <li>
+                <a class="find-work" onclick="findWork(53.18, 1, -97, 46.39, -0.57, 114.17)"><span
+                        class="workTitle">Untitled</span></a><br>
+                originally in 2018<br>
+                by Joe Pearson (b. 1990)<br>
+                oil on canvas
+            </li>
+        </ul>
+        </p>
+    </div>
+
+    <div id="about-exhibition" style="display: none;">
+        <h1>Man-Made Animals:<br>Self in the Other</h1>
+        <p>an online Pavilion of <a href="https://thewrong.org/" target="_blank">the 6th Wrong Biennale</a></p>
+        <p>Since cave paintings, the earliest documentations of art by humans, animals have never left human's
+            artworks. Whether they are depicted in pigments from mineral stones or binary data, the renderings of
+            the animals are shaped by the latest technologies by humans and the environments we are in. In a
+            phenomenological sense, animals for humans are never animals per se; they are partially man-made, as an
+            externalized version of psychological and philosophical “self”, or as “the other,” something alien and
+            unfathomable, or, most likely, both.</p>
+        <p>With these thoughts in mind, SXSY Collective presents a series of artworks featuring animal-related works
+            of various media – from painting to sculpture to video to participatory and interactive work by a group
+            of local and international artists – all inside a 3D video game directly accessible in a browser. The
+            virtual gallery space for the exhibition is a replica of the SXSY Office on the 46th floor of a
+            skyscraper in downtown Chengdu, a metropolitan in Southwest China with a population of 20 million
+            people. Confined in an awkwardly urban and limited space in a supposedly infinite virtual space, the
+            viewers are confronted with animal works that press them to think about the relationships between the
+            viewers, the artists, the animals, and the space, discovering "self" in various types of "other."</p>
+        <br>
+        <h1>Artists</h1>
+        <p>The following artists are exhibiting their work in this exhibition:</p>
+        <ul>
+            <li><a href="https://antonekonst.com/" target="_blank">Antone Konst</a> (b. 1987, New Haven, USA)</li>
+            <li><a href="https://www.elpihv.co.uk/" target="_blank">Elpida Hadezi-Vasileva</a> (b. 1971, Kavadarci,
+                Macedonia)
+            </li>
+            <li>Joe Pearson (b. 1990, London, UK)</li>
+            <li>RESET (b. 1996, Zhengzhou, China)</li>
+            <li>Sheng Zhang (b. 1980, Kaifeng, China)</li>
+            <li>SXSY Collective (b. 2019, Chengdu, China)</li>
+            <li>Weikang Gong (b. 1992, Mianyang, China)</li>
+            <li><a href="https://www.elpihv.co.uk/" target="_blank">Wenyun Xiong</a> (b. 1955, Chongqing, China)</li>
+            <li>Yalin Zhao (Chengdu, China)</li>
+            <li>Yinan Song (b. 1991, Xinxiang, China)</li>
+        </ul>
+        <br>
+        <h1>Creators</h1>
+        <p>See the full list of creator for this project by clickong on the "Creators" button in the bottom left
+            menu.</p>
+        <br>
+        <h1>Technologies</h1>
+        <p>This project is built with Babylon.js for programming and Blender for 3D modeling & animation.</p>
+        <br>
+        <h1>Special Thanks</h1>
+        <p>We receive advice and help from the following organizations & individuals:</p>
+        <ul>
+            <li><a href="https://thewrong.org/" target="_blank">The 6th Wrong Biennale</a></li>
+            <li>Meng Tian, Unique Art Museum, Chengdu, China</li>
+            <li>Kate Gu, M+ Art Museum, Hong Kong, China</li>
+            <li>Jody Huang, Almost Four Artspace, Chengdu, China</li>
+        </ul>
+    </div>
+    <div id="about-us" style="display: none;">
+        <h1>SXSY Collective</h1>
+        <p>The Man-Made Animals: Self in the Other exhibition is curated and produced by SXSY Collective as an
+            online pavilion for the 6th Wrong Biennale.</p>
+        <p>SXSY Collective is an art collective under <a class="sxsyworks" href="http://sxsy.works"
+                                                         target="_blank">SXSY Works</a>, an art, design & technology
+            studio, based in Chengdu, China.</p>
+        <br>
+        <h1>Credits</h1>
+        <p>SXSY Collective curates and produces this exhibition.</p>
+        <ul>
+            <li>Project Lead: Yinan Song</li>
+            <li>Curation: Yinan Song</li>
+            <li>Visual Design: Yinan Song, Shaohua Gong</li>
+            <li>3D Modeling: Mengxin Huang, Yinan Song, Baochang Lu, Tingyun Yin, Zhihan Zhang, Heng Wu</li>
+            <li>Programming: Siyuan Peng, Yinan Song, Yujia Liu, Xiulin Wang, Shixu Liu</li>
+            <li>Music: Dmitrii Kolesnikov
+            <li>Text: Yinan Song</li>
+            <li>Translation: Shaohua Gong</li>
+        </ul>
+        <br>
+        <h1>Artists</h1>
+        <p>The following artists are exhibiting their work in this exhibition:</p>
+        <ul>
+            <li><a href="https://antonekonst.com/" target="_blank">Antone Konst</a> (b. 1987, New Haven, USA)</li>
+            <li><a href="https://www.elpihv.co.uk/" target="_blank">Elpida Hadezi-Vasileva</a> (b. 1971, Kavadarci,
+                Macedonia)
+            </li>
+            <li>Joe Pearson (b. 1990, London, UK)</li>
+            <li>RESET (b. 1996, Zhengzhou, China)</li>
+            <li>Sheng Zhang (b. 1980, Kaifeng, China)</li>
+            <li>SXSY Collective (b. 2019, Chengdu, China)</li>
+            <li>Weikang Gong (b. 1992, Mianyang, China)</li>
+            <li><a href="https://www.elpihv.co.uk/" target="_blank">Wenyun Xiong</a> (b. 1955, Chongqing, China)</li>
+            <li>Yalin Zhao (Chengdu, China)</li>
+            <li>Yinan Song (b. 1991, Xinxiang, China)</li>
+        </ul>
+        <br>
+    </div>
+</div>
+
+<div class="rightBottomButton" data-html2canvas-ignore="true">
+    <span style="color: white; letter-spacing: 0.1em">Take me to the</span>
+    <button onclick="window.location.href='./index.html';">Elephant Room</button>
+    <button onclick="window.location.href='./scene1.html';">Wild Animal Room</button>
+    <button onclick="window.location.href='./scene3.html';">Not an Animal Room</button>
+</div>
+
+<!-- <canvas id="rootCanvas"></canvas> -->
+
+</body>
+<script>
+    const canvas = document.createElement('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.position = "fixed";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    document.body.appendChild(canvas);
+
+    const engine = new BABYLON.Engine(canvas, true);
+    const scene = new BABYLON.Scene(engine);
+
+    // 加载动画
+    const loadingScene = document.getElementById('loading-scene');
+    let progress;
+    const loadingTextProgress = document.querySelector('#loading-text-progress')
+    // const loadingScreen = document.getElementById('loading-screen');
+    // loadingScreen.style.display = 'flex';
+
+    window.addEventListener('resize', () => {
+        engine.resize();
+    });
+
+    camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(-7, -1.715, -17), scene);
+    // Targets the camera to scene origin
+    // This attaches the camera to the canvas
+    camera.attachControl(canvas, true);
+    camera.setTarget(new BABYLON.Vector3(80.314, 4.639, -220.06));
+    // 定义相机的固定高度
+    const fixedHeight = 1;
+    // 注册相机移动事件
+    camera.onAfterCheckInputsObservable.add(function () {
+        // 通过限制相机的高度来固定相机位置
+        camera.position.y = fixedHeight;
+    });
+    // 设置相机的初始位置
+    camera.position = new BABYLON.Vector3(38, fixedHeight, -74);
+    camera.speed = 1;
+    camera.checkCollisions = true;
+    let cameraTarget = camera.getTarget()
+
+    // 后期滤镜开始于此
+    var bgCamera = new BABYLON.ArcRotateCamera("BGCamera", Math.PI / 2 + Math.PI / 7, Math.PI / 2, 100,
+        new BABYLON.Vector3(0, 20, 0),
+        scene);
+    bgCamera.layerMask = 0x10000000;
+
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    advancedTexture.layer.layerMask = 0x10000000;
+    advancedTexture.renderScale = 1.5;
+
+    // Create default pipeline
+    var defaultPipeline = new BABYLON.DefaultRenderingPipeline("default", true, scene, [camera]);
+    var curve = new BABYLON.ColorCurves();
+    curve.globalHue = 200;
+    curve.globalDensity = 80;
+    curve.globalSaturation = 80;
+    curve.highlightsHue = 20;
+    curve.highlightsDensity = 80;
+    curve.highlightsSaturation = -80;
+    curve.shadowsHue = 2;
+    curve.shadowsDensity = 80;
+    curve.shadowsSaturation = 40;
+    defaultPipeline.imageProcessing.colorCurves = curve;
+    defaultPipeline.depthOfField.focalLength = 150;
+
+    // 滤镜参数（按顺序）
+    defaultPipeline.samples = 4 // 打开为4，关闭为0
+    defaultPipeline.fxaaEnabled = true;// 打开为true，关闭为false
+    // defaultPipeline.bloomEnabled = true;// 打开为true，关闭为false
+    // defaultPipeline.bloomKernel = 1;// 最小1，最大500
+    // defaultPipeline.bloomWeight = 0;// 最小0，最大1
+    // defaultPipeline.bloomThreshold = 0;// 最小0，最大1
+    // defaultPipeline.bloomScale = 0;// 最小0，最大1
+    // defaultPipeline.depthOfFieldEnabled = true;// 打开为true，关闭为false
+    // defaultPipeline.depthOfFieldBlurLevel = 0;
+    // defaultPipeline.depthOfField.focusDistance = 1;// 最小1，最大50000
+    // defaultPipeline.depthOfField.fStop = 1;// 最小1，最大10
+    // defaultPipeline.depthOfField.focalLength = 1;// 最小1，最大300
+    defaultPipeline.chromaticAberrationEnabled = true;// 打开为true，关闭为false
+    defaultPipeline.chromaticAberration.aberrationAmount = 5;// 最小-1000，最大1000
+    defaultPipeline.chromaticAberration.radialIntensity = 0.1;// 最小0.1，最大5
+    defaultPipeline.chromaticAberration.direction.x = 1;
+    defaultPipeline.chromaticAberration.direction.y = 1;
+    defaultPipeline.grainEnabled = true;// 打开为true，关闭为false
+    defaultPipeline.grain.intensity = 5;// 最小0，最大100
+    defaultPipeline.grain.animated = true;// 打开为true，关闭为false
+    // 后期滤镜结束于此
+
+    // 场景中添加一个skybox  给窗外添加贴图效果
+    const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    const skyboxTexture = new BABYLON.CubeTexture("./textures/skybox", scene, ["-px.png", "-py.png", "-pz.png", "-nx.png", "-ny.png", "-nz.png"]);
+    skyboxMaterial.reflectionTexture = skyboxTexture;
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size: 1000.0}, scene);
+    skybox.material = skyboxMaterial;
+
+
+    // 创建窗子边不可靠近效果
+    const obstacleTwo = BABYLON.MeshBuilder.CreateBox('obstacleTwo', {size: 2}, scene)
+    obstacleTwo.position = new BABYLON.Vector3(52, 0, -120)
+    obstacleTwo.scaling = new BABYLON.Vector3(18, 4, 2)
+    obstacleTwo.checkCollisions = true
+    obstacleTwo.visibility = false
+
+
+    // 加载gltf模型
+    BABYLON.SceneLoader.ImportMesh("", "scenes/scene2/", "fish.glb", scene, async function (meshes, particleSystems, skeletons) {
+
+        // 创建平行光1，从上方照射
+        var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+        light1.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光2，从下方照射
+        var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, 1, 0), scene);
+        light2.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光3，从左方照射
+        var light3 = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(1, 0, 0), scene);
+        light3.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光4，从右方照射
+        var light4 = new BABYLON.DirectionalLight("light4", new BABYLON.Vector3(-1, 0, 0), scene);
+        light4.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // // 设置环境光
+        // scene.ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+
+        await Ammo();
+        scene.enablePhysics(null, new BABYLON.AmmoJSPlugin());
+        camera.checkCollisions = true;
+
+        // 遍历所有模型 meshes
+        meshes.forEach((mesh) => {
+            // 设置模型的碰撞体
+            mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, {mass: 0}, scene);
+            mesh.checkCollisions = true;
+        });
+    }, e => {
+        var loadedNum = e.loaded;
+        var totalNum = e.total;
+        progress = parseInt(100 * loadedNum / totalNum).toString() + "%";
+        loadingTextProgress.innerHTML = "while we are building the SXSY Cloud Gallery & the exhibition...<br><br>" + progress;
+        progress == '100%' ? setTimeout(() => loadingScene.style.display = 'none', 3200) : null
+    }, checkCollisions = true);
+
+    // 加载gltf模型
+    // 房间内部场景模型
+    BABYLON.SceneLoader.ImportMesh("", "scenes/scene2/", "scene2.glb", scene, async function (meshes, particleSystems, skeletons) {
+        await Ammo();
+        scene.enablePhysics(null, new BABYLON.AmmoJSPlugin());
+        camera.checkCollisions = true;
+        camera.ellipsoid = new BABYLON.Vector3(2, 2, 2);
+
+        // 遍历所有模型 meshes
+        meshes.forEach((mesh) => {
+            // 设置模型的碰撞体
+            mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, {mass: 0}, scene);
+            mesh.checkCollisions = true;
+        });
+    }, checkCollisions = true);
+
+    BABYLON.SceneLoader.ImportMesh("", "scenes/scene2/", "horse.glb", scene, function (meshes, particleSystems, skeletons) {
+        // 创建平行光1，从上方照射
+        var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+        light1.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光2，从下方照射
+        var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, 1, 0), scene);
+        light2.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光3，从左方照射
+        var light3 = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(1, 0, 0), scene);
+        light3.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光4，从右方照射
+        var light4 = new BABYLON.DirectionalLight("light4", new BABYLON.Vector3(-1, 0, 0), scene);
+        light4.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 设置环境光
+        scene.ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+    }, checkCollisions = true);
+
+    BABYLON.SceneLoader.ImportMesh("", "scenes/scene2/", "spray.glb", scene, function (meshes, particleSystems, skeletons) {
+    }, checkCollisions = true);
+
+    BABYLON.SceneLoader.ImportMesh("", "scenes/scene2/", "bugs.glb", scene, function (meshes, particleSystems, skeletons) {
+        purplePainting = newMeshes[0];
+
+        // 创建平行光1，从上方照射
+        var light1 = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(0, -1, 0), scene);
+        light1.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光2，从下方照射
+        var light2 = new BABYLON.DirectionalLight("light2", new BABYLON.Vector3(0, 1, 0), scene);
+        light2.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光3，从左方照射
+        var light3 = new BABYLON.DirectionalLight("light3", new BABYLON.Vector3(1, 0, 0), scene);
+        light3.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 创建平行光4，从右方照射
+        var light4 = new BABYLON.DirectionalLight("light4", new BABYLON.Vector3(-1, 0, 0), scene);
+        light4.diffuse = new BABYLON.Color3(1, 1, 1);
+
+        // 设置环境光
+        scene.ambientColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+
+        // 添加你的模型操作代码
+
+    }, checkCollisions = true);
+
+    setTimeout(function () {
+        purplePainting.position.x = 10;
+    }, 1000);
+
+    // 进入房间时的交互
+    const obstaclePositions = [
+        {position: new BABYLON.Vector3(47, 1, -71), scaling: new BABYLON.Vector3(1, 1, 1)},
+    ];
+
+    const createObstacle = (name, position, scaling) => {
+        const obstacle = BABYLON.MeshBuilder.CreateBox(name, {size: 1}, scene);
+        obstacle.position = position;
+        obstacle.scaling = scaling;
+        obstacle.visibility = false;
+        return obstacle;
+    };
+
+    const entrytip = document.querySelectorAll('#entrytip');
+    const leftbutton = document.querySelectorAll('#leftbutton');
+    const rightbutton = document.querySelectorAll('#rightbutton');
+
+    const obstacles = obstaclePositions.map(obstacle => {
+        return createObstacle('obstacle', obstacle.position, obstacle.scaling);
+    });
+
+    let mainRoom = null;
+    let doorIndex = 1;
+    let whichDoor;
+
+    scene.registerBeforeRender(function () {
+        let shortestDistance = Infinity
+        for (let i = 0; i < obstacles.length; i++) {
+            const distance = BABYLON.Vector3.Distance(camera.position, obstacles[i].position);
+            if (i == 0 && distance < 7 && doorIndex == 1) {
+                whichDoor = i
+                doorIndex = 2
+                // 回到主房间模型
+                BABYLON.SceneLoader.ImportMesh("", "scenes/scene2/", "scene2-exit-door.glb", scene, async function (meshes, particleSystems, skeletons) {
+                    // 遍历所有模型 meshes
+                    meshes.forEach((mesh) => {
+                        if (mesh.name == '房间3-出门') {
+                            let material = new BABYLON.StandardMaterial("material", scene);
+                            material.emissiveColor = new BABYLON.Color3(1, 1, 1);
+                            material.opacity = 0.5;
+                            material.alpha = 0.5;
+                            material.reflectivity = 0;
+                            mesh.material = material
+                            mainRoom = mesh
+                        }
+                    });
+                }, checkCollisions = true);
+
+                for (let i = 0; i < entrytip.length; i++) {
+                    entrytip[i].style.display = 'none';
+                }
+                entrytip[i].style.display = 'block';
+            }
+
+            shortestDistance = Math.min(shortestDistance, distance);
+        }
+        if (shortestDistance >= 8) {
+            doorIndex = 1
+            mainRoom == null ? null : mainRoom.isVisible = false
+            for (i = 0; i < entrytip.length; i++) {
+                entrytip[i].style.display = 'none';
+            }
+        }
+    })
+
+    // 取消按钮的回调
+    for (let i = 0; i < rightbutton.length; i++) {
+        rightbutton[i].addEventListener('click', () => {
+            for (let j = 0; j < rightbutton.length; j++) {
+                entrytip[j].style.display = 'none';
+            }
+        })
+    }
+
+    // 根据不同的门来让leftbutton来执行不同的程序
+    for (i = 0; i < leftbutton.length; i++) {
+        leftbutton[i].addEventListener('click', function (event) {
+            if (whichDoor == 0) {
+                // 存储相机位置
+                var cameraPosition = camera.position.asArray();
+                console.log(cameraPosition);
+                sessionStorage.setItem('cameraPosition', JSON.stringify(cameraPosition));
+
+                // 存储相机目标位置
+                var cameraTarget = camera.target.asArray();
+                sessionStorage.setItem('cameraTarget', JSON.stringify(cameraTarget));
+                window.location.href = 'index.html'
+            } else if (whichDoor == 1) {
+                // 存储相机位置
+                var cameraPosition = camera.position.asArray();
+                sessionStorage.setItem('cameraPosition', JSON.stringify(cameraPosition));
+
+                // 存储相机目标位置
+                var cameraTarget = camera.target.asArray();
+                sessionStorage.setItem('cameraTarget', JSON.stringify(cameraTarget));
+
+                window.location.href = 'scene2.html'
+            }
+        })
+    }
+
+    // 点击返回主房间按钮的回调事件
+    const backToMainRoom = document.getElementById('backToMainRoom')
+    backToMainRoom.addEventListener('click', () => {
+        this.location.href = 'index.html'
+    })
+    // 点击返回起始位置按钮的回调事件
+    const backToOriginalPosition = document.getElementById('backToOriginalPosition')
+    backToOriginalPosition.addEventListener('click', () => {
+        camera.position = new BABYLON.Vector3(40, fixedHeight, -73);
+        camera.setTarget(new BABYLON.Vector3(80.314, 4.639, -220.06));
+    })
+
+    // 启动引擎来渲染场景
+    engine.runRenderLoop(() => {
+        scene.render();
+    });
+
+    // 静音按钮
+    const mute = document.querySelector('#mute')
+    const mainAudio = document.querySelector('#mainAudio')
+    mute.addEventListener('click', () => {
+        if (mainAudio.paused) {
+            mainAudio.play()
+        } else {
+            mainAudio.pause()
+        }
+    })
+</script>
+
+<!-- 音效 -->
+<script>
+    // 菜单哔哔的声音
+    $(".leftBottomSection button").mouseenter(function () {
+        beep.pause();
+        beep.play();
+    });
+
+    $(".rightBottomButton button").mouseenter(function () {
+        beep.pause();
+        beep.play();
+    });
+
+    $(".handy-menu button").mouseenter(function () {
+        beep.pause();
+        beep.play();
+    });
+
+    $("#words").mouseenter(function () {
+        dong.pause();
+        ding.play();
+    });
+
+    $("#tips-ok").mouseenter(function () {
+        beep.play();
+    });
+
+    $("a").mouseenter(function () {
+        dong.pause();
+        ding.play();
+    });
+
+    $("a").mouseleave(function () {
+        ding.pause();
+        dong.play();
+    });
+
+    $("#capture").mousedown(function () {
+        shutter.play();
+    });
+
+    $("#backToOriginalPosition").mousedown(function () {
+        whoosh.play();
+    });
+
+    $("#mute").mousedown(function () {
+        beep.play();
+    });
+
+    // 窗口大小改变之后重新读取
+    var resizeTimeout;
+    window.addEventListener('resize', function(event) {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function(){
+        window.location.reload();
+      }, 1500);
+        beep.play();
+        $("#noti").css("display", "block");
+    });
+</script>
+
+<!--babylon camera filter -->
+<!-- <script type="text/javascript" src="./lib/postprocessing.js"></script> -->
+
+</html>
+
+<!--这两个是给dom元素添加监听事件的 最后引入-->
+<script src="./lib/entrytipShowWhoosh.js"></script>
+<script src="./lib/entrytipButtonAudio.js"></script>
